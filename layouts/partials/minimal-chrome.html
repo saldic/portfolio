@@ -1,0 +1,53 @@
+<div class="minimal-cursor" aria-hidden="true"></div>
+
+<script>
+  // Shared by the minimal pages: smooth anchor scrolling, the scroll progress
+  // bar and the cursor dot.
+  document.addEventListener("DOMContentLoaded", () => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    document.documentElement.style.scrollBehavior = reduceMotion ? "auto" : "smooth";
+
+    const updateScrollProgress = () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
+      document.documentElement.style.setProperty("--portfolio-scroll-progress", progress.toString());
+    };
+
+    updateScrollProgress();
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
+
+    if (!finePointer || reduceMotion) return;
+
+    const cursor = document.querySelector(".minimal-cursor");
+    let pointerX = window.innerWidth / 2;
+    let pointerY = window.innerHeight / 2;
+    let cursorX = pointerX;
+    let cursorY = pointerY;
+
+    document.body.classList.add("minimal-cursor-ready");
+
+    const animateCursor = () => {
+      cursorX += (pointerX - cursorX) * 0.18;
+      cursorY += (pointerY - cursorY) * 0.18;
+      cursor.style.translate = `${cursorX}px ${cursorY}px`;
+      window.requestAnimationFrame(animateCursor);
+    };
+
+    window.addEventListener("pointermove", (event) => {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      cursor.classList.add("is-visible");
+    }, { passive: true });
+
+    document.documentElement.addEventListener("mouseleave", () => cursor.classList.remove("is-visible"));
+
+    document.querySelectorAll("a, button").forEach((element) => {
+      element.addEventListener("pointerenter", () => cursor.classList.add("is-link"));
+      element.addEventListener("pointerleave", () => cursor.classList.remove("is-link"));
+    });
+
+    animateCursor();
+  });
+</script>

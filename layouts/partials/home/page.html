@@ -1,36 +1,202 @@
-<div class="minimal-home minimal-home--clean-sections">
-  <section class="minimal-hero" aria-labelledby="minimal-hero-title">
-    <div class="minimal-title-marquee">
-      <h1 id="minimal-hero-title" class="minimal-title-marquee__track" aria-label="Computer Science Student">
-        <span class="minimal-title-marquee__set" aria-hidden="true">
-          <span class="minimal-title-marquee__item" lang="en">Computer Science Student</span>
-          <span class="minimal-title-marquee__item" lang="da">Datamatikerstuderende</span>
-          <span class="minimal-title-marquee__item" lang="bs">Student računarstva</span>
-          <span class="minimal-title-marquee__item" lang="en">Computer Science Student</span>
-          <span class="minimal-title-marquee__item" lang="fr">Étudiant en informatique</span>
-          <span class="minimal-title-marquee__item" lang="de">Informatikstudent</span>
-        </span>
-        <span class="minimal-title-marquee__set" aria-hidden="true">
-          <span class="minimal-title-marquee__item" lang="en">Computer Science Student</span>
-          <span class="minimal-title-marquee__item" lang="da">Datamatikerstuderende</span>
-          <span class="minimal-title-marquee__item" lang="bs">Student računarstva</span>
-          <span class="minimal-title-marquee__item" lang="en">Computer Science Student</span>
-          <span class="minimal-title-marquee__item" lang="fr">Étudiant en informatique</span>
-          <span class="minimal-title-marquee__item" lang="de">Informatikstudent</span>
-        </span>
-      </h1>
-    </div>
+{{ partial "flap-kit.html" . }}
 
+<div class="minimal-home minimal-home--clean-sections">
+  <section class="minimal-hero" aria-label="Dino Saldic">
+    <h1 class="minimal-flap" tabindex="0">
+      <span class="minimal-flap__line">Dino Saldic</span>
+      <span class="minimal-flap__line" lang="da">Datamatikerstuderende</span>
+    </h1>
+    <script>
+      // Hero title: idles as random letters and flips to the real text once on
+      // hover, focus or tap. Runs right after the markup so the real text
+      // never flashes first.
+      (() => {
+        const title = document.currentScript.previousElementSibling;
+        if (!minimalFlap) return;
+
+        const DRUM = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const LETTERS = DRUM.slice(1);
+        const NOISE = 4; // flaps started per tick while idle
+        const cells = [];
+        const randomLetter = () => LETTERS[Math.floor(Math.random() * LETTERS.length)];
+
+        title.querySelectorAll(".minimal-flap__line").forEach((line, row) => {
+          const text = line.textContent.trim().toUpperCase();
+          minimalFlap.build(line).forEach((cell, column) => {
+            cell.target = text[column];
+            cell.delay = column * 38 + row * 120;
+            minimalFlap.show(cell, randomLetter());
+            cells.push(cell);
+          });
+        });
+        title.classList.add("is-flap");
+
+        let visible = true;
+        new IntersectionObserver(([entry]) => {
+          visible = entry.isIntersecting;
+        }).observe(title);
+
+        const noise = window.setInterval(() => {
+          if (!visible || document.hidden) return;
+          for (let i = 0; i < NOISE; i++) {
+            const cell = cells[Math.floor(Math.random() * cells.length)];
+            if (!cell.busy) minimalFlap.flip(cell, randomLetter());
+          }
+        }, 110);
+
+        let revealed = false;
+        const reveal = () => {
+          if (revealed) return;
+          revealed = true;
+          window.clearInterval(noise);
+          cells.forEach((cell) => window.setTimeout(() => minimalFlap.settle(cell, DRUM, cell.target), cell.delay));
+        };
+        ["pointerenter", "focus", "click"].forEach((type) => title.addEventListener(type, reveal));
+      })();
+    </script>
     <div class="minimal-hero__footer">
       <a class="minimal-availability" href="#contact" aria-label="Go to contact section">
-        <span class="minimal-availability__icon" aria-hidden="true">{{ partial "cat-mark.html" . }}</span>
         <span class="minimal-availability__copy">
           <strong>Open to internships</strong>
-          <small>Copenhagen based</small>
         </span>
       </a>
     </div>
   </section>
+
+  <section id="projects" class="minimal-story" aria-label="Projects">
+    <div class="minimal-story__stage">
+      <article class="minimal-story__lines">
+        <h2 data-story-step="1">Project eru</h2>
+        <p data-story-step="2">Built 2026</p>
+        <p data-story-step="3">Doom-scrolling worth remembering</p>
+        <p data-story-step="3">Quotes · Theories · Facts</p>
+        <p data-story-step="3">Java · React · REST API</p>
+        <a data-story-step="4" href="{{ "projects/eru-project/what-is-eru/" | relLangURL }}">Read the whole story ↗</a>
+      </article>
+    </div>
+  </section>
+  <script>
+    // Project story: the stage stays pinned while you scroll, and each scroll
+    // step flips more of the copy into place, line under line; scrolling back
+    // up flips it away again. Without the flap kit the copy simply shows as
+    // plain text.
+    (() => {
+      const story = document.currentScript.previousElementSibling;
+      if (!minimalFlap) return;
+
+      const STEPS = 5; // flaps per cell when a line comes in
+
+      const stage = story.querySelector(".minimal-story__stage");
+      const lines = story.querySelector(".minimal-story__lines");
+      const phrases = [...lines.querySelectorAll("[data-story-step]")].map((element) => ({
+        element,
+        step: Number(element.dataset.storyStep),
+        words: element.textContent.trim().split(/\s+/),
+        cells: [],
+        lit: false,
+      }));
+      const lastStep = Math.max(...phrases.map((phrase) => phrase.step));
+      const link = phrases.find((phrase) => phrase.element.matches("a"));
+
+      const marker = document.createElement("div");
+      marker.className = "minimal-story__steps";
+      marker.setAttribute("aria-hidden", "true");
+      for (let i = 0; i < lastStep; i++) marker.append(document.createElement("i"));
+      stage.append(marker);
+      story.style.setProperty("--story-steps", lastStep);
+      story.classList.add("is-story");
+
+      let columns = 0;
+      let step = 0;
+      let leaving = false; // the link was followed and the board is clearing
+
+      const light = (phrase, delay) => {
+        phrase.lit = true;
+        phrase.element.classList.add("is-lit");
+        phrase.cells.forEach(({ cell, char }, i) => {
+          window.setTimeout(() => {
+            if (phrase.lit) minimalFlap.settle(cell, minimalFlap.DRUM, char, STEPS);
+          }, delay + i * 28);
+        });
+      };
+
+      const dim = (phrase) => {
+        phrase.lit = false;
+        phrase.element.classList.remove("is-lit");
+        phrase.cells.forEach(({ cell }, i) => {
+          window.setTimeout(() => {
+            if (!phrase.lit) minimalFlap.settle(cell, minimalFlap.DRUM, " ", 1);
+          }, i * 12);
+        });
+      };
+
+      const setStep = (next) => {
+        if (leaving) return;
+        step = next;
+        phrases.filter((phrase) => phrase.lit && phrase.step > step).forEach((phrase) => dim(phrase));
+        phrases.filter((phrase) => !phrase.lit && phrase.step <= step).forEach((phrase, i) => light(phrase, i * 260));
+        [...marker.children].forEach((tick, i) => tick.classList.toggle("is-current", i + 1 === step));
+      };
+
+      // Turns every line into blank flap cells, wrapped onto more rows when
+      // the screen is too narrow for it.
+      const layout = () => {
+        const fit = minimalFlap.fit(lines);
+        if (fit === columns) return;
+        columns = fit;
+
+        phrases.forEach((phrase) => {
+          phrase.element.classList.remove("is-lit");
+          phrase.lit = false;
+          phrase.cells = minimalFlap.compose(phrase.element, phrase.words, columns);
+          phrase.cells
+            .filter(({ char }) => char === "↗")
+            .forEach(({ cell }) => cell.element.classList.add("minimal-story__arrow"));
+        });
+
+        setStep(step);
+      };
+
+      // Step 0 until the stage covers most of the screen, then one step per
+      // equal share of the scroll distance while the stage is pinned.
+      const update = () => {
+        const box = story.getBoundingClientRect();
+        const progress = Math.min(Math.max(-box.top / (box.height - stage.offsetHeight), 0), 1);
+        setStep(box.top > window.innerHeight * 0.35 ? 0 : Math.min(1 + Math.floor(progress * lastStep), lastStep));
+      };
+
+      new ResizeObserver(layout).observe(lines);
+      window.addEventListener("scroll", update, { passive: true });
+      layout();
+      update();
+
+      // Keyboard users reach the link without scrolling, so bring its step to them.
+      link.element.addEventListener("focus", () => {
+        if (link.lit) return;
+        const box = story.getBoundingClientRect();
+        window.scrollTo({ top: window.scrollY + box.top + (box.height - stage.offsetHeight) * ((link.step - 0.5) / lastStep) });
+      });
+
+      // Following the link clears the board line by line before the page
+      // changes, so the next page can fill a board of its own.
+      link.element.addEventListener("click", (event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        leaving = true;
+        phrases.forEach((phrase, i) => window.setTimeout(() => dim(phrase), i * 45));
+        window.setTimeout(() => {
+          window.location.href = link.element.href;
+        }, 560);
+      });
+
+      // Coming back with the browser's back button finds the board filled again.
+      window.addEventListener("pageshow", (event) => {
+        if (!event.persisted) return;
+        leaving = false;
+        update();
+      });
+    })();
+  </script>
 
   <section id="about" class="minimal-section minimal-about" aria-labelledby="minimal-about-title">
     <p class="minimal-label"><span>01</span> About</p>
@@ -65,9 +231,6 @@
       <a href="{{ "projects/eru-project/frontend-process/" | relLangURL }}">
         <span>03</span><strong>Frontend process</strong><small>React · Routes · Authentication</small><b aria-hidden="true">↗</b>
       </a>
-      <a href="{{ "blog/first-steps/" | relLangURL }}">
-        <span>04</span><strong>First steps</strong><small>Processing · February 2025</small><b aria-hidden="true">↗</b>
-      </a>
     </nav>
   </section>
 
@@ -79,28 +242,16 @@
     <nav aria-label="Social links">
       <a href="https://github.com/saldic" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
       <a href="https://www.linkedin.com/in/dinosaldic/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-      <a href="{{ "blog/" | relLangURL }}">Blog ↗</a>
     </nav>
   </section>
 </div>
 
-<div class="minimal-cursor" aria-hidden="true"></div>
+{{ partial "minimal-chrome.html" . }}
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
-    document.documentElement.style.scrollBehavior = reduceMotion ? "auto" : "smooth";
-
-    const updateScrollProgress = () => {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
-      document.documentElement.style.setProperty("--portfolio-scroll-progress", progress.toString());
-    };
-
-    updateScrollProgress();
-    window.addEventListener("scroll", updateScrollProgress, { passive: true });
 
     if (!reduceMotion && "IntersectionObserver" in window) {
       const targets = document.querySelectorAll(".minimal-about__content, .minimal-work__heading, .minimal-feature, .minimal-project-list a");
@@ -115,52 +266,20 @@
         { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
       );
       targets.forEach((element) => observer.observe(element));
+
+      const contact = document.querySelector(".minimal-contact");
+      if (contact) {
+        contact.classList.add("is-waiting");
+        const entrance = new IntersectionObserver(([entry]) => {
+          if (!entry.isIntersecting) return;
+          contact.classList.remove("is-waiting");
+          entrance.disconnect();
+        }, { threshold: 0.3 });
+        entrance.observe(contact);
+      }
     }
 
     if (finePointer && !reduceMotion) {
-      const cursor = document.querySelector(".minimal-cursor");
-      const availability = document.querySelector(".minimal-availability");
-      let pointerX = window.innerWidth / 2;
-      let pointerY = window.innerHeight / 2;
-      let cursorX = pointerX;
-      let cursorY = pointerY;
-
-      document.body.classList.add("minimal-cursor-ready");
-
-      const animateCursor = () => {
-        cursorX += (pointerX - cursorX) * 0.18;
-        cursorY += (pointerY - cursorY) * 0.18;
-        if (cursor) cursor.style.translate = `${cursorX}px ${cursorY}px`;
-        window.requestAnimationFrame(animateCursor);
-      };
-
-      window.addEventListener("pointermove", (event) => {
-        pointerX = event.clientX;
-        pointerY = event.clientY;
-        cursor?.classList.add("is-visible");
-      }, { passive: true });
-
-      document.documentElement.addEventListener("mouseleave", () => cursor?.classList.remove("is-visible"));
-
-      const setAvailabilityIconSpeed = (rate) => {
-        availability?.querySelector(".minimal-availability__icon")
-          ?.getAnimations()
-          .forEach((animation) => animation.updatePlaybackRate(rate));
-      };
-
-      availability?.addEventListener("pointerenter", () => {
-        setAvailabilityIconSpeed(2.25);
-      });
-
-      availability?.addEventListener("pointerleave", () => {
-        setAvailabilityIconSpeed(1);
-      });
-
-      document.querySelectorAll("a, button").forEach((element) => {
-        element.addEventListener("pointerenter", () => cursor?.classList.add("is-link"));
-        element.addEventListener("pointerleave", () => cursor?.classList.remove("is-link"));
-      });
-
       document.querySelectorAll("[data-tilt]").forEach((element) => {
         element.addEventListener("pointermove", (event) => {
           const bounds = element.getBoundingClientRect();
@@ -174,8 +293,6 @@
           element.style.setProperty("--minimal-tilt-y", "0deg");
         });
       });
-
-      animateCursor();
     }
   });
 </script>

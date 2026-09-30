@@ -1,16 +1,15 @@
 <header class="minimal-nav">
   <a class="minimal-nav__identity" href="{{ "" | relLangURL }}" aria-label="Dino Saldic — home">
-    <span class="minimal-nav__mark">{{ partial "cat-mark.html" . }}</span>
     <strong>Dino Saldic</strong>
   </a>
 
   <div class="minimal-nav-menu" data-minimal-menu>
     <nav id="minimal-menu-panel" class="minimal-nav-menu__panel" aria-label="Primary navigation">
       <div class="minimal-nav-menu__links">
-        <a href="{{ "projects/" | relLangURL }}">Projects</a>
-        <a href="{{ "blog/" | relLangURL }}">Blog</a>
-        <a href="#about">About me</a>
-        <a href="#contact">Contact</a>
+        {{ $home := cond .IsHome "" (relLangURL "") }}
+        <a href="{{ $home }}#projects">Projects</a>
+        <a href="{{ $home }}#about">About me</a>
+        <a href="{{ $home }}#contact">Contact</a>
         <button
           id="appearance-switcher"
           class="minimal-nav__theme"

@@ -1,50 +1,54 @@
-<script>document.documentElement.classList.add("minimal-loader-enabled");</script>
+<script>
+  // The loader plays on a first visit and on a reload, not when arriving from
+  // another page of the site or with the back button, and never with reduced
+  // motion.
+  (() => {
+    const [navigation] = performance.getEntriesByType("navigation");
+    const fromSite =
+      navigation?.type === "back_forward" ||
+      (document.referrer.startsWith(window.location.origin) && navigation?.type !== "reload");
+    if (fromSite || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    document.documentElement.classList.add("minimal-loader-enabled");
+  })();
+</script>
 
 <div class="minimal-loader" aria-hidden="true">
-  <div class="minimal-loader__inner">
-    <div class="minimal-loader__mark">{{ partial "cat-mark.html" . }}</div>
+  <div class="minimal-loader__badge">
+    {{ (resources.Get "images/superBadge.svg").Content | safeHTML }}
   </div>
 </div>
 
 <script>
   (() => {
     const root = document.documentElement;
-    const loader = document.querySelector(".minimal-loader");
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const loader = document.currentScript.previousElementSibling;
+    if (!root.classList.contains("minimal-loader-enabled")) {
+      loader.remove();
+      return;
+    }
+
+    const MINIMUM_MS = 1900; // long enough for the badge to fill
     const startedAt = performance.now();
-    const minimumDuration = reduceMotion ? 0 : 1850;
     let finished = false;
 
-    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-    if (window.location.hash) {
-      history.replaceState(history.state, "", `${window.location.pathname}${window.location.search}`);
-    }
-    window.scrollTo(0, 0);
-
-    const revealSite = () => {
-      if (finished || !loader) return;
+    const leave = () => {
+      if (finished) return;
       finished = true;
-
-      const remaining = Math.max(0, minimumDuration - (performance.now() - startedAt));
       window.setTimeout(() => {
-        root.classList.add("minimal-site-ready");
         loader.classList.add("is-leaving");
-
         window.setTimeout(() => {
           loader.remove();
           root.classList.remove("minimal-loader-enabled");
-        }, reduceMotion ? 0 : 900);
-      }, remaining);
+        }, 900);
+      }, Math.max(0, MINIMUM_MS - (performance.now() - startedAt)));
     };
 
     if (document.readyState === "complete") {
-      revealSite();
+      leave();
     } else {
-      window.addEventListener("load", revealSite, { once: true });
+      window.addEventListener("load", leave, { once: true });
     }
 
-    window.addEventListener("pageshow", () => window.scrollTo(0, 0), { once: true });
-
-    window.setTimeout(revealSite, 4000);
+    window.setTimeout(leave, 4000);
   })();
 </script>

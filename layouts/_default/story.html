@@ -1,0 +1,83 @@
+{{ define "main" }}
+  {{ partial "flap-kit.html" . }}
+
+  <article class="minimal-home minimal-article">
+    <header class="minimal-article__hero">
+      <p class="minimal-label">
+        <span>Project</span>
+        {{ with .Parent }}{{ .Title }} ·{{ end }}
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+      </p>
+      <h1 class="minimal-article__title">{{ .Title }}</h1>
+    </header>
+
+    <div class="minimal-article__body">
+      {{ .Content }}
+    </div>
+
+    <nav class="minimal-article__back" aria-label="Back">
+      <a href="{{ "" | relLangURL }}#projects"><span aria-hidden="true">←</span> Back to projects</a>
+    </nav>
+  </article>
+  <script>
+    // Story page: the title flips in on arrival, and each section heading
+    // flips in once, when it scrolls into view. Without the flap kit they
+    // simply show as plain text.
+    (() => {
+      const article = document.currentScript.previousElementSibling;
+      if (!minimalFlap) return;
+
+      const STEPS = 5; // flaps per cell
+      const spell = (letters) =>
+        letters.forEach(({ cell, char }, i) => window.setTimeout(() => minimalFlap.settle(cell, minimalFlap.DRUM, char, STEPS), i * 28));
+
+      // Turns `element` into blank flap cells, wrapped to its width, and
+      // returns the function that flips its text in. After that a resize
+      // that changes the wrapping shows the text straight away.
+      const board = (element) => {
+        const words = element.textContent.trim().split(/\s+/);
+        let columns = 0;
+        let letters = [];
+        let shown = false;
+
+        const layout = () => {
+          const fit = minimalFlap.fit(element);
+          if (fit === columns) return;
+          columns = fit;
+          letters = minimalFlap.compose(element, words, columns);
+          if (shown) letters.forEach(({ cell, char }) => minimalFlap.show(cell, char));
+        };
+        new ResizeObserver(layout).observe(element);
+        layout();
+
+        return () => {
+          shown = true;
+          spell(letters);
+        };
+      };
+
+      window.setTimeout(board(article.querySelector(".minimal-article__title")), 150);
+
+      const waiting = new Map();
+      const observer = new IntersectionObserver(
+        (entries) => entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          waiting.get(entry.target)();
+          observer.unobserve(entry.target);
+        }),
+        { threshold: 0.6 }
+      );
+      article.querySelectorAll(".minimal-article__body h2").forEach((heading) => {
+        // The heading's own text goes on the board; the theme's anchor stays.
+        const text = document.createElement("span");
+        text.className = "minimal-article__heading";
+        text.append(...[...heading.childNodes].filter((node) => !(node instanceof Element && node.matches(".anchor, .not-prose"))));
+        heading.prepend(text);
+        waiting.set(heading, board(text));
+        observer.observe(heading);
+      });
+    })();
+  </script>
+
+  {{ partial "minimal-chrome.html" . }}
+{{ end }}

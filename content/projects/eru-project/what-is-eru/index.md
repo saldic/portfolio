@@ -3,6 +3,7 @@ title: "Welcome to eru"
 description: "A short introduction to the project."
 date: 2026-03-23
 weight: 5
+layout: "story"
 ---
 
 ## What is eru?

@@ -3,3 +3,6 @@
 public/
 resources/
 node_modules/
+.env
+.venv/
+.rag-sync-state.json

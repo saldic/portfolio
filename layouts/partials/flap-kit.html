@@ -1,0 +1,118 @@
+<script>
+  // Split-flap kit for the minimal pages. It is null without the Web
+  // Animations API or with reduced motion, and the text then simply stays as
+  // plain text.
+  const minimalFlap = (() => {
+    if (!Element.prototype.animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
+
+    const FLIP_MS = 64; // one flap
+    const CELL_WIDTH = 0.84; // em, as in the stylesheet
+    const DRUM = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·-↗?";
+
+    const show = (cell, char) => {
+      cell.halves.forEach((half) => {
+        half.firstChild.textContent = char;
+      });
+      cell.current = char;
+    };
+
+    // The old top half falls away from the next letter waiting behind it,
+    // then the next bottom half drops over the old one. Both flaps carry the
+    // page colour, so they cover what is underneath and no half goes blank;
+    // at rest they are hidden and only the two still halves show.
+    const flip = async (cell, next) => {
+      const [under, bottom, top, fold] = cell.halves;
+      cell.busy = true;
+      under.firstChild.textContent = next;
+      fold.firstChild.textContent = next;
+      top.style.visibility = "visible";
+      const down = top.animate([{ transform: "rotateX(0deg)" }, { transform: "rotateX(-90deg)" }], { duration: FLIP_MS / 2, easing: "ease-in", fill: "forwards" });
+      await down.finished;
+      top.style.visibility = "";
+      top.firstChild.textContent = next;
+      down.cancel();
+      fold.style.visibility = "visible";
+      const up = fold.animate([{ transform: "rotateX(90deg)" }, { transform: "rotateX(0deg)" }], { duration: FLIP_MS / 2, easing: "ease-out", fill: "forwards" });
+      await up.finished;
+      bottom.firstChild.textContent = next;
+      fold.style.visibility = "";
+      up.cancel();
+      cell.current = next;
+      cell.busy = false;
+    };
+
+    // Swaps the content of `line` for `length` blank cells and keeps the
+    // real text in a hidden label for screen readers.
+    const build = (line, length = line.textContent.trim().length) => {
+      const label = document.createElement("span");
+      label.className = "minimal-flap__label";
+      label.append(...line.childNodes);
+      const row = document.createElement("span");
+      row.className = "minimal-flap__row";
+      row.setAttribute("aria-hidden", "true");
+
+      const cells = Array.from({ length }, () => {
+        const element = document.createElement("span");
+        element.className = "minimal-flap__cell";
+        const halves = ["under", "bottom", "top", "fold"].map((name) => {
+          const half = document.createElement("span");
+          half.className = `minimal-flap__half minimal-flap__half--${name}`;
+          half.append(document.createElement("span"));
+          element.append(half);
+          return half;
+        });
+        row.append(element);
+        const cell = { element, halves, busy: false, job: 0 };
+        show(cell, " ");
+        return cell;
+      });
+      line.replaceChildren(label, row);
+      return cells;
+    };
+
+    // Flips a cell on through the drum, like a real board, until it shows
+    // `target`. `maxSteps` caps the number of flaps by skipping ahead.
+    const settle = async (cell, drum, target, maxSteps = Infinity) => {
+      const job = ++cell.job;
+      while (cell.busy) await new Promise((resolve) => window.setTimeout(resolve, 20));
+      const wheel = drum.includes(target) ? drum : drum + target;
+      const path = [];
+      for (let i = wheel.indexOf(cell.current); wheel[i] !== target; ) {
+        i = (i + 1) % wheel.length;
+        path.push(wheel[i]);
+      }
+      for (const char of path.slice(-maxSteps)) {
+        if (cell.job !== job) return;
+        await flip(cell, char);
+      }
+    };
+
+    // How many cells fit across `element`.
+    const fit = (element) => Math.floor(element.clientWidth / (CELL_WIDTH * parseFloat(getComputedStyle(element).fontSize)));
+
+    // Rebuilds `element` as rows of blank cells for `words`, wrapped to
+    // `columns`, and returns every cell with the letter it is to show.
+    const compose = (element, words, columns) => {
+      const rows = words
+        .reduce((fitted, word) => {
+          const last = fitted[fitted.length - 1];
+          if (last && last.length + 1 + word.length <= columns) fitted[fitted.length - 1] = `${last} ${word}`;
+          else fitted.push(word);
+          return fitted;
+        }, [])
+        .map((text) => {
+          const row = document.createElement("span");
+          row.className = "minimal-flap__line";
+          row.textContent = text;
+          return row;
+        });
+      element.replaceChildren(...rows);
+      return rows.flatMap((row) => {
+        const chars = [...row.textContent.toUpperCase()];
+        return build(row).map((cell, i) => ({ cell, char: chars[i] }));
+      });
+    };
+
+    return { DRUM, build, show, flip, settle, fit, compose };
+  })();
+</script>
