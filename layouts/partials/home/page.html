@@ -4,7 +4,7 @@
   <section class="minimal-hero" aria-label="Dino Saldic">
     <h1 class="minimal-flap" tabindex="0">
       <span class="minimal-flap__line">Dino Saldic</span>
-      <span class="minimal-flap__line" lang="da">Datamatikerstuderende</span>
+      <span class="minimal-flap__line">Computer Science Student</span>
     </h1>
     <script>
       // Hero title: idles as random letters and flips to the real text once on
@@ -18,14 +18,23 @@
         const LETTERS = DRUM.slice(1);
         const NOISE = 4; // flaps started per tick while idle
         const cells = [];
-        const randomLetter = () => LETTERS[Math.floor(Math.random() * LETTERS.length)];
+        const width = minimalFlap.measure(title);
+        const narrowest = [...LETTERS].sort((a, b) => width(a) - width(b)).slice(0, 3);
+        // While idle a cell only shows letters about as wide as its own.
+        const randomLetter = (cell) => {
+          const fitting = [...LETTERS].filter((char) => width(char) <= cell.width + 0.04);
+          const pool = fitting.length >= 3 ? fitting : narrowest;
+          return pool[Math.floor(Math.random() * pool.length)];
+        };
 
         title.querySelectorAll(".minimal-flap__line").forEach((line, row) => {
-          const text = line.textContent.trim().toUpperCase();
-          minimalFlap.build(line).forEach((cell, column) => {
-            cell.target = text[column];
+          const text = minimalCaps(line.textContent.trim());
+          const letters = minimalFlap.build(line).map((cell, column) => ({ cell, char: text[column] }));
+          minimalFlap.fitCells(letters, title);
+          letters.forEach(({ cell, char }, column) => {
+            cell.target = char;
             cell.delay = column * 38 + row * 120;
-            minimalFlap.show(cell, randomLetter());
+            minimalFlap.show(cell, randomLetter(cell));
             cells.push(cell);
           });
         });
@@ -40,7 +49,7 @@
           if (!visible || document.hidden) return;
           for (let i = 0; i < NOISE; i++) {
             const cell = cells[Math.floor(Math.random() * cells.length)];
-            if (!cell.busy) minimalFlap.flip(cell, randomLetter());
+            if (!cell.busy) minimalFlap.flip(cell, randomLetter(cell));
           }
         }, 110);
 
@@ -67,11 +76,8 @@
     <div class="minimal-story__stage">
       <article class="minimal-story__lines">
         <h2 data-story-step="1">Project eru</h2>
-        <p data-story-step="2">Built 2026</p>
-        <p data-story-step="3">Doom-scrolling worth remembering</p>
-        <p data-story-step="3">Quotes · Theories · Facts</p>
-        <p data-story-step="3">Java · React · REST API</p>
-        <a data-story-step="4" href="{{ "projects/eru-project/what-is-eru/" | relLangURL }}">Read the whole story ↗</a>
+        <p data-story-step="2">Doom-scrolling worth remembering</p>
+        <a data-story-step="3" href="{{ "projects/eru-project/what-is-eru/" | relLangURL }}">Read the whole story ↗</a>
       </article>
     </div>
   </section>
@@ -82,7 +88,10 @@
     // plain text.
     (() => {
       const story = document.currentScript.previousElementSibling;
-      if (!minimalFlap) return;
+      if (!minimalFlap) {
+        minimalKeepCase(story);
+        return;
+      }
 
       const STEPS = 5; // flaps per cell when a line comes in
 
@@ -106,7 +115,7 @@
       story.style.setProperty("--story-steps", lastStep);
       story.classList.add("is-story");
 
-      let columns = 0;
+      let width = 0;
       let step = 0;
       let leaving = false; // the link was followed and the board is clearing
 
@@ -141,14 +150,13 @@
       // Turns every line into blank flap cells, wrapped onto more rows when
       // the screen is too narrow for it.
       const layout = () => {
-        const fit = minimalFlap.fit(lines);
-        if (fit === columns) return;
-        columns = fit;
+        if (lines.clientWidth === width) return;
+        width = lines.clientWidth;
 
         phrases.forEach((phrase) => {
           phrase.element.classList.remove("is-lit");
           phrase.lit = false;
-          phrase.cells = minimalFlap.compose(phrase.element, phrase.words, columns);
+          phrase.cells = minimalFlap.compose(phrase.element, phrase.words, width);
           phrase.cells
             .filter(({ char }) => char === "↗")
             .forEach(({ cell }) => cell.element.classList.add("minimal-story__arrow"));

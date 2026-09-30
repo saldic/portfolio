@@ -25,7 +25,11 @@
     // simply show as plain text.
     (() => {
       const article = document.currentScript.previousElementSibling;
-      if (!minimalFlap) return;
+      minimalKeepCase(article.querySelector(".minimal-label"));
+      if (!minimalFlap) {
+        article.querySelectorAll(".minimal-article__title, .minimal-article__body > h2").forEach(minimalKeepCase);
+        return;
+      }
 
       const STEPS = 5; // flaps per cell
       const spell = (letters) =>
@@ -36,15 +40,14 @@
       // that changes the wrapping shows the text straight away.
       const board = (element) => {
         const words = element.textContent.trim().split(/\s+/);
-        let columns = 0;
+        let width = 0;
         let letters = [];
         let shown = false;
 
         const layout = () => {
-          const fit = minimalFlap.fit(element);
-          if (fit === columns) return;
-          columns = fit;
-          letters = minimalFlap.compose(element, words, columns);
+          if (element.clientWidth === width) return;
+          width = element.clientWidth;
+          letters = minimalFlap.compose(element, words, width);
           if (shown) letters.forEach(({ cell, char }) => minimalFlap.show(cell, char));
         };
         new ResizeObserver(layout).observe(element);

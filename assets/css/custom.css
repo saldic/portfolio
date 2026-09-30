@@ -855,12 +855,16 @@ a[role="button"]:hover {
   text-decoration: none;
 }
 
-.minimal-nav__identity strong {
-  color: var(--minimal-fg);
-  font-size: 0.7rem;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.minimal-nav__identity svg {
+  display: block;
+  width: auto;
+  height: clamp(2rem, 3.2vw, 2.5rem);
+  transition: opacity 0.25s ease, translate 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.minimal-nav__identity:hover svg {
+  opacity: 0.75;
+  translate: 0 -0.15rem;
 }
 
 .minimal-nav-menu {
@@ -1572,10 +1576,6 @@ a[role="button"]:hover {
 }
 
 @media (max-width: 480px) {
-  .minimal-nav__identity strong {
-    display: none;
-  }
-
   .minimal-nav-menu.is-open {
     width: calc(100vw - (var(--minimal-gutter) * 2));
   }
@@ -1636,6 +1636,18 @@ a[role="button"]:hover {
 
 }
 
+/* The flap cells already hold their letters in the right case, and names in
+   minimalNames keep theirs where CSS sets the capitals. */
+.minimal-keep-case,
+.minimal-flap__row {
+  text-transform: none;
+}
+
+.minimal-label .minimal-keep-case {
+  margin-right: 0;
+  color: inherit;
+}
+
 /* Split-flap title (homepage hero) */
 .minimal-flap {
   display: grid;
@@ -1679,7 +1691,6 @@ a[role="button"]:hover {
   position: relative;
   width: 0.84em;
   height: 1.2em;
-  overflow: hidden;
   perspective: 8em;
 }
 
@@ -1688,13 +1699,16 @@ a[role="button"]:hover {
   right: 0;
   left: 0;
   height: 50%;
-  overflow: hidden;
+  clip-path: inset(0 -0.6em);
   backface-visibility: hidden;
 }
 
+/* Flex centring lets a letter wider than its cell spill evenly to both sides. */
 .minimal-flap__half > span {
-  display: block;
+  display: flex;
   height: 1.2em;
+  justify-content: center;
+  letter-spacing: 0;
   line-height: 1.2em;
   text-align: center;
   white-space: pre;

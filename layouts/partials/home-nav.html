@@ -1,6 +1,6 @@
 <header class="minimal-nav">
   <a class="minimal-nav__identity" href="{{ "" | relLangURL }}" aria-label="Dino Saldic — home">
-    <strong>Dino Saldic</strong>
+    {{ (resources.Get "images/justCat.svg").Content | replaceRE `fill="#[0-9A-Fa-f]+"` `fill="currentColor"` | replaceRE `<svg ` `<svg aria-hidden="true" ` | safeHTML }}
   </a>
 
   <div class="minimal-nav-menu" data-minimal-menu>
