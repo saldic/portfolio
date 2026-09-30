@@ -1,14 +1,35 @@
 {{ define "main" }}
   {{ partial "flap-kit.html" . }}
 
+  {{/* A chapter title such as "01 - Planning Phase" is split into its number
+     and its name. */}}
+  {{ $title := .Title }}
+  {{ $kicker := "Project" }}
+  {{ with findRESubmatch `^(\d+)\s*-\s*(.+)$` .Title 1 }}
+    {{ $kicker = printf "Chapter %s" (index . 0 1) }}
+    {{ $title = index . 0 2 }}
+  {{ end }}
+
+  {{/* Back goes to the parent page when it is a story page too, otherwise to
+     the projects on the homepage. */}}
+  {{ $backURL := print (relLangURL "") "#projects" }}
+  {{ $backLabel := "Back to projects" }}
+  {{ with .Parent }}
+    {{ if eq .Layout "story" }}
+      {{ $backURL = .RelPermalink }}
+      {{ $backLabel = print "Back to " .Title }}
+    {{ end }}
+  {{ end }}
+
   <article class="minimal-home minimal-article">
     <header class="minimal-article__hero">
       <p class="minimal-label">
-        <span>Project</span>
+        <span>{{ $kicker }}</span>
         {{ with .Parent }}{{ .Title }} ·{{ end }}
         <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+        {{ if .Params.showReadingTime }}· {{ .ReadingTime }} min read{{ end }}
       </p>
-      <h1 class="minimal-article__title">{{ .Title }}</h1>
+      <h1 class="minimal-article__title">{{ $title }}</h1>
     </header>
 
     <div class="minimal-article__body">
@@ -16,7 +37,7 @@
     </div>
 
     <nav class="minimal-article__back" aria-label="Back">
-      <a href="{{ "" | relLangURL }}#projects"><span aria-hidden="true">←</span> Back to projects</a>
+      <a href="{{ $backURL }}"><span aria-hidden="true">←</span> {{ $backLabel }}</a>
     </nav>
   </article>
   <script>
@@ -25,7 +46,9 @@
     // simply show as plain text.
     (() => {
       const article = document.currentScript.previousElementSibling;
-      minimalKeepCase(article.querySelector(".minimal-label"));
+      article
+        .querySelectorAll(".minimal-label, .exam-week-card__title, .exam-portfolio-nav a, .exam-portfolio-pagination a")
+        .forEach(minimalKeepCase);
       if (!minimalFlap) {
         article.querySelectorAll(".minimal-article__title, .minimal-article__body > h2").forEach(minimalKeepCase);
         return;

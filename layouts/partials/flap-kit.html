@@ -2,16 +2,16 @@
   // Names that are always written in lowercase, even where the rest of the
   // text is set in capitals.
   const minimalNames = ["eru"];
-  const minimalCaps = (text) => minimalNames.reduce((out, name) => out.replace(new RegExp(`\\b${name}\\b`, "gi"), name), text.toUpperCase());
+  const minimalNamePattern = () => new RegExp(`\\b(?:${minimalNames.join("|")})(?:['’]s)?\\b`, "gi");
+  const minimalCaps = (text) => text.toUpperCase().replace(minimalNamePattern(), (name) => name.toLowerCase());
 
   // Where CSS sets the capitals instead, wraps the names so they keep their case.
   const minimalKeepCase = (element) => {
-    const pattern = new RegExp(`\\b(${minimalNames.join("|")})\\b`, "i");
     const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
     const nodes = [];
-    while (walker.nextNode()) if (pattern.test(walker.currentNode.textContent)) nodes.push(walker.currentNode);
+    while (walker.nextNode()) if (minimalNamePattern().test(walker.currentNode.textContent)) nodes.push(walker.currentNode);
     nodes.forEach((node) => {
-      const parts = node.textContent.split(new RegExp(`\\b(${minimalNames.join("|")})\\b`, "i"));
+      const parts = node.textContent.split(new RegExp(`(${minimalNamePattern().source})`, "i"));
       node.replaceWith(...parts.map((part, i) => {
         if (i % 2 === 0) return part;
         const name = document.createElement("span");
@@ -30,7 +30,7 @@
 
     const FLIP_MS = 64; // one flap
     const TRACKING = 0.08; // em of space around each settled letter
-    const DRUM = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·-↗?abcdefghijklmnopqrstuvwxyz";
+    const DRUM = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·-↗?!=&',.:()/abcdefghijklmnopqrstuvwxyz";
     const ruler = document.createElement("canvas").getContext("2d");
 
     // Measures single letters in `element`'s font; widths come back in em.

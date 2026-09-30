@@ -4,6 +4,9 @@ description: "Backend process"
 date: 2026-04-07
 weight: 10
 hideChildList: true
+layout: "story"
+cascade:
+  layout: "story"
 ---
 
 Welcome to my backend exam portfolio for **eru**, a backend API developed during the third semester backend course.

@@ -134,30 +134,4 @@
     </section>
   {{ end }}
   {{ partial "pagination.html" . }}
-
-  {{ if in .RelPermalink "/projects/eru-project/exam-portfolio/" }}
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const updateMotionChrome = () => {
-          const scrollTop = window.scrollY || window.pageYOffset;
-          const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-          const progress = scrollHeight > 0 ? Math.min(scrollTop / scrollHeight, 1) : 0;
-          document.documentElement.style.setProperty("--portfolio-scroll-progress", progress.toString());
-          document.documentElement.style.setProperty("--portfolio-parallax-offset", `${scrollTop * -0.025}px`);
-        };
-
-        updateMotionChrome();
-        let ticking = false;
-        window.addEventListener("scroll", () => {
-          if (!ticking) {
-            window.requestAnimationFrame(() => {
-              updateMotionChrome();
-              ticking = false;
-            });
-            ticking = true;
-          }
-        }, { passive: true });
-      });
-    </script>
-  {{ end }}
 {{ end }}

@@ -4,6 +4,9 @@ description: "Frontend process"
 date: 2026-04-24
 weight: 15
 hideChildList: true
+layout: "story"
+cascade:
+  layout: "story"
 ---
 
 Welcome to my frontend process for **eru**, where the focus shifts from the finished backend to building the user-facing experience on top of it.
