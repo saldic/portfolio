@@ -7,25 +7,16 @@
       <span class="minimal-flap__line">Computer Science Student</span>
     </h1>
     <script>
-      // Hero title: idles as random letters and flips to the real text once on
-      // hover, focus or tap. Runs right after the markup so the real text
+      // Hero title: idles as random letters and decodes into the real text once
+      // on hover, focus or tap. Runs right after the markup so the real text
       // never flashes first.
       (() => {
         const title = document.currentScript.previousElementSibling;
         if (!minimalFlap) return;
 
-        const DRUM = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const LETTERS = DRUM.slice(1);
-        const NOISE = 4; // flaps started per tick while idle
+        const NOISE = 4; // letters swapped per tick while idle
+        const REVEAL_STEPS = 9; // random letters per cell on the way to the real text
         const cells = [];
-        const width = minimalFlap.measure(title);
-        const narrowest = [...LETTERS].sort((a, b) => width(a) - width(b)).slice(0, 3);
-        // While idle a cell only shows letters about as wide as its own.
-        const randomLetter = (cell) => {
-          const fitting = [...LETTERS].filter((char) => width(char) <= cell.width + 0.04);
-          const pool = fitting.length >= 3 ? fitting : narrowest;
-          return pool[Math.floor(Math.random() * pool.length)];
-        };
 
         title.querySelectorAll(".minimal-flap__line").forEach((line, row) => {
           const text = minimalCaps(line.textContent.trim());
@@ -34,7 +25,7 @@
           letters.forEach(({ cell, char }, column) => {
             cell.target = char;
             cell.delay = column * 38 + row * 120;
-            minimalFlap.show(cell, randomLetter(cell));
+            minimalFlap.show(cell, minimalFlap.random(cell));
             cells.push(cell);
           });
         });
@@ -49,7 +40,7 @@
           if (!visible || document.hidden) return;
           for (let i = 0; i < NOISE; i++) {
             const cell = cells[Math.floor(Math.random() * cells.length)];
-            if (!cell.busy) minimalFlap.flip(cell, randomLetter(cell));
+            if (!cell.busy) minimalFlap.swap(cell, minimalFlap.random(cell));
           }
         }, 110);
 
@@ -58,7 +49,7 @@
           if (revealed) return;
           revealed = true;
           window.clearInterval(noise);
-          cells.forEach((cell) => window.setTimeout(() => minimalFlap.settle(cell, DRUM, cell.target), cell.delay));
+          cells.forEach((cell) => window.setTimeout(() => minimalFlap.settle(cell, cell.target, REVEAL_STEPS), cell.delay));
         };
         ["pointerenter", "focus", "click"].forEach((type) => title.addEventListener(type, reveal));
       })();
@@ -93,7 +84,7 @@
         return;
       }
 
-      const STEPS = 5; // flaps per cell when a line comes in
+      const STEPS = 6; // random letters per cell when a line comes in
 
       const stage = story.querySelector(".minimal-story__stage");
       const lines = story.querySelector(".minimal-story__lines");
@@ -124,7 +115,7 @@
         phrase.element.classList.add("is-lit");
         phrase.cells.forEach(({ cell, char }, i) => {
           window.setTimeout(() => {
-            if (phrase.lit) minimalFlap.settle(cell, minimalFlap.DRUM, char, STEPS);
+            if (phrase.lit) minimalFlap.settle(cell, char, STEPS);
           }, delay + i * 28);
         });
       };
@@ -134,7 +125,7 @@
         phrase.element.classList.remove("is-lit");
         phrase.cells.forEach(({ cell }, i) => {
           window.setTimeout(() => {
-            if (!phrase.lit) minimalFlap.settle(cell, minimalFlap.DRUM, " ", 1);
+            if (!phrase.lit) minimalFlap.settle(cell, " ", 1);
           }, i * 12);
         });
       };

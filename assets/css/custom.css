@@ -1337,7 +1337,7 @@ a[role="button"]:hover {
   color: inherit;
 }
 
-/* Split-flap title (homepage hero) */
+/* Letter-board title (homepage hero) */
 .minimal-flap {
   display: grid;
   justify-items: start;
@@ -1380,65 +1380,17 @@ a[role="button"]:hover {
   position: relative;
   width: 0.84em;
   height: 1.2em;
-  perspective: 8em;
-}
-
-.minimal-flap__half {
-  position: absolute;
-  right: 0;
-  left: 0;
-  height: 50%;
-  /* Cut each half off top and bottom on whole pixels, so the halves meet
-     without a seam, but let a wide letter spill out to the sides. Browsers
-     without overflow: clip fall back to hidden. */
-  overflow: hidden;
-  overflow-x: visible;
-  overflow-y: clip;
-  backface-visibility: hidden;
 }
 
 /* Flex centring lets a letter wider than its cell spill evenly to both sides. */
-.minimal-flap__half > span {
+.minimal-flap__face {
+  position: absolute;
+  inset: 0;
   display: flex;
-  height: 1.2em;
   justify-content: center;
   letter-spacing: 0;
   line-height: 1.2em;
-  text-align: center;
   white-space: pre;
-}
-
-/* The upper halves reach one pixel past the middle, so where the middle falls
-   between two screen pixels the halves overlap instead of leaving a faint
-   line through the letters. */
-.minimal-flap__half--under,
-.minimal-flap__half--top {
-  top: 0;
-  height: calc(50% + 1px);
-}
-
-.minimal-flap__half--top,
-.minimal-flap__half--fold {
-  background: var(--minimal-bg);
-  visibility: hidden;
-}
-
-.minimal-flap__half--top {
-  transform-origin: 50% 100%;
-}
-
-.minimal-flap__half--bottom,
-.minimal-flap__half--fold {
-  top: 50%;
-}
-
-.minimal-flap__half--bottom > span,
-.minimal-flap__half--fold > span {
-  transform: translateY(-50%);
-}
-
-.minimal-flap__half--fold {
-  transform-origin: 50% 0;
 }
 
 /* Project story (homepage) */

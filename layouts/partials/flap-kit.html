@@ -22,16 +22,19 @@
     });
   };
 
-  // Split-flap kit for the minimal pages. It is null without the Web
-  // Animations API or with reduced motion, and the text then simply stays as
-  // plain text.
+  // Letter-board kit for the minimal pages: every letter sits in a cell of
+  // its own and decodes into place, running through a few random letters
+  // before it lands. It is null with reduced motion, and the text then simply
+  // stays as plain text.
   const minimalFlap = (() => {
-    if (!Element.prototype.animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
 
-    const FLIP_MS = 64; // one flap
+    const STEP_MS = 55; // how long each passing letter shows
     const TRACKING = 0.08; // em of space around each settled letter
-    const DRUM = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·-↗?!=&',.:()/abcdefghijklmnopqrstuvwxyz";
+    const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const LOWER = UPPER.toLowerCase();
     const ruler = document.createElement("canvas").getContext("2d");
+    const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
     // Measures single letters in `element`'s font; widths come back in em.
     const measure = (element) => {
@@ -46,46 +49,37 @@
     };
 
     // Sizes every cell to the letter it will settle on, so the finished text
-    // is spaced like type rather than like a grid. Letters passing through
-    // on the way may spill a little over their neighbours.
+    // is spaced like type rather than like a grid. A cell then only passes
+    // through letters that fit in it, so nothing spills over its neighbours.
     const fitCells = (letters, element) => {
       const width = measure(element);
       letters.forEach(({ cell, char }) => {
         cell.width = width(char) + TRACKING;
+        cell.fits = (other) => width(other) <= cell.width - TRACKING / 2;
         cell.element.style.width = `${cell.width.toFixed(3)}em`;
       });
     };
 
     const show = (cell, char) => {
-      cell.halves.forEach((half) => {
-        half.firstChild.textContent = char;
-      });
+      cell.face.textContent = char;
       cell.current = char;
     };
 
-    // The old top half falls away from the next letter waiting behind it,
-    // then the next bottom half drops over the old one. Both flaps carry the
-    // page colour, so they cover what is underneath and no half goes blank;
-    // at rest they are hidden and only the two still halves show.
-    const flip = async (cell, next) => {
-      const [under, bottom, top, fold] = cell.halves;
+    // Shows `next` and holds it for one step.
+    const swap = async (cell, next) => {
       cell.busy = true;
-      under.firstChild.textContent = next;
-      fold.firstChild.textContent = next;
-      top.style.visibility = "visible";
-      const down = top.animate([{ transform: "rotateX(0deg)" }, { transform: "rotateX(-90deg)" }], { duration: FLIP_MS / 2, easing: "ease-in", fill: "forwards" });
-      await down.finished;
-      top.style.visibility = "";
-      top.firstChild.textContent = next;
-      down.cancel();
-      fold.style.visibility = "visible";
-      const up = fold.animate([{ transform: "rotateX(90deg)" }, { transform: "rotateX(0deg)" }], { duration: FLIP_MS / 2, easing: "ease-out", fill: "forwards" });
-      await up.finished;
-      bottom.firstChild.textContent = next;
-      fold.style.visibility = "";
-      up.cancel();
-      cell.current = next;
+      show(cell, next);
+      await wait(STEP_MS);
       cell.busy = false;
+    };
+
+    // A random letter that fits the cell, in the case of `like`. The
+    // narrowest cells, with room for little more than an I, may go blank.
+    const random = (cell, like = "A") => {
+      const letters = [...(like !== like.toUpperCase() ? LOWER : UPPER)];
+      const fitting = cell.fits ? letters.filter(cell.fits) : letters;
+      const pool = fitting.length >= 3 ? fitting : [...fitting, " "];
+      return pool[Math.floor(Math.random() * pool.length)];
     };
 
     // Swaps the content of `line` for `length` blank cells and keeps the
@@ -101,15 +95,11 @@
       const cells = Array.from({ length }, () => {
         const element = document.createElement("span");
         element.className = "minimal-flap__cell";
-        const halves = ["under", "bottom", "top", "fold"].map((name) => {
-          const half = document.createElement("span");
-          half.className = `minimal-flap__half minimal-flap__half--${name}`;
-          half.append(document.createElement("span"));
-          element.append(half);
-          return half;
-        });
+        const face = document.createElement("span");
+        face.className = "minimal-flap__face";
+        element.append(face);
         row.append(element);
-        const cell = { element, halves, busy: false, job: 0 };
+        const cell = { element, face, busy: false, job: 0 };
         show(cell, " ");
         return cell;
       });
@@ -117,21 +107,17 @@
       return cells;
     };
 
-    // Flips a cell on through the drum, like a real board, until it shows
-    // `target`. `maxSteps` caps the number of flaps by skipping ahead.
-    const settle = async (cell, drum, target, maxSteps = Infinity) => {
+    // Decodes a cell into `target`: it runs through `steps` random letters
+    // that fit it, then lands. A newer call takes over from an older one.
+    const settle = async (cell, target, steps = 6) => {
       const job = ++cell.job;
-      while (cell.busy) await new Promise((resolve) => window.setTimeout(resolve, 20));
-      const wheel = drum.includes(target) ? drum : drum + target;
-      const path = [];
-      for (let i = wheel.indexOf(cell.current); wheel[i] !== target; ) {
-        i = (i + 1) % wheel.length;
-        path.push(wheel[i]);
-      }
-      for (const char of path.slice(-maxSteps)) {
+      while (cell.busy) await wait(20);
+      const like = target === " " ? cell.current : target;
+      for (let i = 0; i < steps; i++) {
         if (cell.job !== job) return;
-        await flip(cell, char);
+        await swap(cell, random(cell, like));
       }
+      if (cell.job === job) await swap(cell, target);
     };
 
     // Rebuilds `element` as rows of blank cells for `words`, wrapped to
@@ -162,6 +148,6 @@
       return letters;
     };
 
-    return { DRUM, build, show, flip, settle, measure, fitCells, compose };
+    return { build, show, swap, random, settle, measure, fitCells, compose };
   })();
 </script>

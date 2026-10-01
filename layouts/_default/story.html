@@ -54,9 +54,9 @@
         return;
       }
 
-      const STEPS = 5; // flaps per cell
+      const STEPS = 6; // random letters per cell
       const spell = (letters) =>
-        letters.forEach(({ cell, char }, i) => window.setTimeout(() => minimalFlap.settle(cell, minimalFlap.DRUM, char, STEPS), i * 28));
+        letters.forEach(({ cell, char }, i) => window.setTimeout(() => minimalFlap.settle(cell, char, STEPS), i * 28));
 
       // Turns `element` into blank flap cells, wrapped to its width, and
       // returns the function that flips its text in. After that a resize
