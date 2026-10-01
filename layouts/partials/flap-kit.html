@@ -148,6 +148,30 @@
       return letters;
     };
 
-    return { build, show, swap, random, settle, measure, fitCells, compose };
+    // Turns `element` into blank cells, wrapped to its width, and returns the
+    // function that decodes its text in. After that, a resize that changes
+    // the wrapping shows the text straight away.
+    const board = (element, steps = 6) => {
+      const words = element.textContent.trim().split(/\s+/);
+      let width = 0;
+      let letters = [];
+      let shown = false;
+
+      const layout = () => {
+        if (element.clientWidth === width) return;
+        width = element.clientWidth;
+        letters = compose(element, words, width);
+        if (shown) letters.forEach(({ cell, char }) => show(cell, char));
+      };
+      new ResizeObserver(layout).observe(element);
+      layout();
+
+      return () => {
+        shown = true;
+        letters.forEach(({ cell, char }, i) => window.setTimeout(() => settle(cell, char, steps), i * 28));
+      };
+    };
+
+    return { build, show, swap, random, settle, measure, fitCells, compose, board };
   })();
 </script>

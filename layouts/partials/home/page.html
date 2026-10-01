@@ -58,6 +58,7 @@
       <a class="minimal-availability" href="#contact" aria-label="Go to contact section">
         <span class="minimal-availability__copy">
           <strong>Open to internships</strong>
+          <small>Copenhagen based</small>
         </span>
       </a>
     </div>
@@ -74,8 +75,8 @@
   </section>
   <script>
     // Project story: the stage stays pinned while you scroll, and each scroll
-    // step flips more of the copy into place, line under line; scrolling back
-    // up flips it away again. Without the flap kit the copy simply shows as
+    // step decodes more of the copy into place, line under line; scrolling
+    // back up clears it again. With reduced motion the copy simply shows as
     // plain text.
     (() => {
       const story = document.currentScript.previousElementSibling;
@@ -138,7 +139,7 @@
         [...marker.children].forEach((tick, i) => tick.classList.toggle("is-current", i + 1 === step));
       };
 
-      // Turns every line into blank flap cells, wrapped onto more rows when
+      // Turns every line into blank letter cells, wrapped onto more rows when
       // the screen is too narrow for it.
       const layout = () => {
         if (lines.clientWidth === width) return;
@@ -234,15 +235,29 @@
   </section>
 
   <section id="contact" class="minimal-contact" aria-labelledby="minimal-contact-title">
-    <p class="minimal-label"><span>03</span> Contact</p>
-    <h2 id="minimal-contact-title">Let’s talk.</h2>
-    <p class="minimal-contact__intro">About internships, software, or a project that refuses to behave.</p>
-    <a class="minimal-contact__mail" href="mailto:dinosaldic.tech@gmail.com">dinosaldic.tech@gmail.com <span aria-hidden="true">↗</span></a>
-    <nav aria-label="Social links">
-      <a href="https://github.com/saldic" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-      <a href="https://www.linkedin.com/in/dinosaldic/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+    <h2 id="minimal-contact-title" class="minimal-contact__title">Let’s talk</h2>
+    <nav class="minimal-contact__links" aria-label="Contact">
+      <a class="minimal-contact__link" href="mailto:dinosaldic.tech@gmail.com">dinosaldic.tech@gmail.com</a>
+      <a class="minimal-contact__link" href="https://github.com/saldic" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a class="minimal-contact__link" href="https://www.linkedin.com/in/dinosaldic/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      {{/* The lily stands on the line above the links, at the right. */}}
+      {{ partial "pixel-lily.html" . }}
     </nav>
   </section>
+  <script>
+    // Contact: the title decodes in once, when the section scrolls into view.
+    (() => {
+      const contact = document.currentScript.previousElementSibling;
+      if (!minimalFlap) return;
+      const reveal = minimalFlap.board(contact.querySelector(".minimal-contact__title"));
+      const observer = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        reveal();
+      }, { threshold: 0.4 });
+      observer.observe(contact);
+    })();
+  </script>
 </div>
 
 {{ partial "minimal-chrome.html" . }}
@@ -265,17 +280,6 @@
         { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
       );
       targets.forEach((element) => observer.observe(element));
-
-      const contact = document.querySelector(".minimal-contact");
-      if (contact) {
-        contact.classList.add("is-waiting");
-        const entrance = new IntersectionObserver(([entry]) => {
-          if (!entry.isIntersecting) return;
-          contact.classList.remove("is-waiting");
-          entrance.disconnect();
-        }, { threshold: 0.3 });
-        entrance.observe(contact);
-      }
     }
 
     if (finePointer && !reduceMotion) {

@@ -41,8 +41,8 @@
     </nav>
   </article>
   <script>
-    // Story page: the title flips in on arrival, and each section heading
-    // flips in once, when it scrolls into view. Without the flap kit they
+    // Story page: the title decodes in on arrival, and each section heading
+    // decodes in once, when it scrolls into view. With reduced motion they
     // simply show as plain text.
     (() => {
       const article = document.currentScript.previousElementSibling;
@@ -54,35 +54,7 @@
         return;
       }
 
-      const STEPS = 6; // random letters per cell
-      const spell = (letters) =>
-        letters.forEach(({ cell, char }, i) => window.setTimeout(() => minimalFlap.settle(cell, char, STEPS), i * 28));
-
-      // Turns `element` into blank flap cells, wrapped to its width, and
-      // returns the function that flips its text in. After that a resize
-      // that changes the wrapping shows the text straight away.
-      const board = (element) => {
-        const words = element.textContent.trim().split(/\s+/);
-        let width = 0;
-        let letters = [];
-        let shown = false;
-
-        const layout = () => {
-          if (element.clientWidth === width) return;
-          width = element.clientWidth;
-          letters = minimalFlap.compose(element, words, width);
-          if (shown) letters.forEach(({ cell, char }) => minimalFlap.show(cell, char));
-        };
-        new ResizeObserver(layout).observe(element);
-        layout();
-
-        return () => {
-          shown = true;
-          spell(letters);
-        };
-      };
-
-      window.setTimeout(board(article.querySelector(".minimal-article__title")), 150);
+      window.setTimeout(minimalFlap.board(article.querySelector(".minimal-article__title")), 150);
 
       const waiting = new Map();
       const observer = new IntersectionObserver(
@@ -99,7 +71,7 @@
         text.className = "minimal-article__heading";
         text.append(...[...heading.childNodes].filter((node) => !(node instanceof Element && node.matches(".anchor, .not-prose"))));
         heading.prepend(text);
-        waiting.set(heading, board(text));
+        waiting.set(heading, minimalFlap.board(text));
         observer.observe(heading);
       });
     })();

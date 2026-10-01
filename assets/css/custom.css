@@ -707,6 +707,15 @@ a[role="button"]:hover {
   text-transform: uppercase;
 }
 
+.minimal-availability small {
+  margin-top: 0.7rem;
+  color: var(--minimal-muted);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 .minimal-availability strong::after {
   position: absolute;
   right: 0;
@@ -927,167 +936,158 @@ a[role="button"]:hover {
 
 .minimal-contact {
   position: relative;
+  display: flex;
   min-height: 90svh;
   padding: clamp(7rem, 14vw, 13rem) var(--minimal-gutter) clamp(3rem, 6vw, 5rem);
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(2rem, 4vw, 3rem);
   border-top: 1px solid var(--minimal-line);
   background: var(--minimal-bg);
   color: var(--minimal-fg);
-  overflow: hidden;
-}
-
-.minimal-contact .minimal-label,
-.minimal-contact .minimal-label span {
-  color: color-mix(in srgb, var(--minimal-fg) 58%, transparent);
-}
-
-.minimal-contact h2 {
-  margin-top: clamp(3rem, 7vw, 7rem);
-  color: var(--minimal-fg);
-  font-size: clamp(4.5rem, 11.2vw, 11rem);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 0.86;
-  clip-path: inset(-0.3em);
-  transition:
-    clip-path 1s cubic-bezier(0.16, 1, 0.3, 1),
-    translate 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.minimal-contact__intro {
-  max-width: 34rem;
-  margin-top: 2.5rem;
-  color: color-mix(in srgb, var(--minimal-fg) 66%, transparent);
-  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
-  line-height: 1.7;
 }
 
 .minimal-home--clean-sections .minimal-about,
-.minimal-home--clean-sections .minimal-work,
-.minimal-home--clean-sections .minimal-contact .minimal-label,
-.minimal-home--clean-sections .minimal-contact__intro {
+.minimal-home--clean-sections .minimal-work {
   display: none;
 }
 
-.minimal-home--clean-sections .minimal-contact h2 {
-  margin-top: 0;
+.minimal-contact__title {
+  max-width: 64rem;
 }
 
-.minimal-contact__mail {
+/* Ways to get in touch: large rows with a line between them, like the links
+   at the end of a story page. */
+.minimal-contact__links {
   position: relative;
-  display: flex;
-  max-width: 50rem;
-  margin-top: clamp(3rem, 6vw, 5rem);
-  padding: 0.8rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--minimal-fg) 54%, transparent);
-  justify-content: space-between;
-  color: var(--minimal-fg);
-  font-size: clamp(1.1rem, 2.5vw, 2rem);
-  text-decoration: none;
-  clip-path: inset(-0.5rem);
-  transition:
-    color 0.3s ease,
-    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-    clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+  display: grid;
+  max-width: 64rem;
+  margin-top: clamp(1rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--minimal-line);
 }
 
-.minimal-contact__mail::after {
-  position: absolute;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  height: 2px;
-  background: var(--minimal-fg);
-  content: "";
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.minimal-contact__mail:hover {
-  border-color: var(--minimal-fg);
-  text-decoration: none;
-  transform: translateY(-0.3rem);
-}
-
-.minimal-contact__mail:hover::after,
-.minimal-contact__mail:focus-visible::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-.minimal-contact__mail span {
-  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.minimal-contact__mail:hover span,
-.minimal-contact__mail:focus-visible span {
-  transform: translate(0.35rem, -0.35rem);
-}
-
-.minimal-contact nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  margin-top: clamp(4rem, 8vw, 8rem);
-  transition:
-    opacity 0.7s ease 0.65s,
-    translate 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.65s;
-}
-
-.minimal-contact nav a {
+.minimal-contact__link {
   position: relative;
-  padding: 0.35rem 0;
-  color: color-mix(in srgb, var(--minimal-fg) 72%, transparent);
-  font-size: 0.67rem;
-  letter-spacing: 0.08em;
+  padding: clamp(1.1rem, 2.4vw, 1.8rem) 2.5rem clamp(1.1rem, 2.4vw, 1.8rem) 0;
+  border-bottom: 1px solid var(--minimal-line);
+  color: #686e74;
+  font-size: clamp(1rem, 2.2vw, 1.8rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
   text-decoration: none;
   text-transform: uppercase;
-  transition:
-    color 0.25s ease,
-    letter-spacing 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 0.3s ease;
 }
 
-.minimal-contact nav a::after {
+.dark .minimal-contact__link {
+  color: var(--minimal-fg);
+}
+
+.minimal-contact__link::after {
+  position: absolute;
+  top: clamp(1.1rem, 2.4vw, 1.8rem);
+  right: 0;
+  content: "↗";
+  transition: translate 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.minimal-contact__link:hover {
+  border-color: currentColor;
+  text-decoration: none;
+}
+
+.minimal-contact__link:hover::after {
+  translate: 0.3rem -0.3rem;
+}
+
+.minimal-contact__link:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.4rem;
+  box-shadow: none;
+}
+
+/* A pixel-art lily in a flower pot, standing on the line above the contact
+   links, and a link to email too. Its pixels are whole screen pixels, so the
+   art stays crisp. */
+.pixel-lily {
+  --pixel: 3px;
   position: absolute;
   right: 0;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  background: currentColor;
-  content: "";
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  bottom: calc(100% + 1px);
+  width: calc(21 * var(--pixel));
+  height: calc(30 * var(--pixel));
+  color: #686e74;
+  text-decoration: none;
 }
 
-.minimal-contact nav a:hover {
+.pixel-lily:hover {
+  text-decoration: none;
+}
+
+.pixel-lily:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.4rem;
+  box-shadow: none;
+}
+
+.dark .pixel-lily {
   color: var(--minimal-fg);
-  letter-spacing: 0.13em;
-  transform: translateY(-0.22rem);
 }
 
-.minimal-contact nav a:hover::after,
-.minimal-contact nav a:focus-visible::after {
-  transform: scaleX(1);
-  transform-origin: left;
+.pixel-lily svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
 }
 
-/* Contact entrance, played once when the section scrolls into view: the
-   headline is uncovered as it rises, the mail line draws itself from the
-   left and the links follow. */
-.minimal-contact.is-waiting h2 {
-  clip-path: inset(-0.3em -0.3em 100% -0.3em);
-  translate: 0 0.3em;
+.pixel-lily__tone-2 {
+  fill-opacity: 0.72;
 }
 
-.minimal-contact.is-waiting .minimal-contact__mail {
-  clip-path: inset(-0.5rem 100% -0.5rem -0.5rem);
+.pixel-lily__tone-3 {
+  fill-opacity: 0.48;
 }
 
-.minimal-contact.is-waiting nav {
+.pixel-lily__tone-4 {
+  fill-opacity: 0.32;
+}
+
+/* "Help me grow", beside the flower while it blooms. */
+.pixel-lily__note {
+  position: absolute;
+  top: calc(2 * var(--pixel));
+  right: calc(100% + 2 * var(--pixel));
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
   opacity: 0;
-  translate: 0 0.8rem;
+  pointer-events: none;
+  text-transform: uppercase;
+  translate: 0.5rem 0;
+  transition:
+    opacity 0.25s ease,
+    translate 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.pixel-lily.is-open .pixel-lily__note {
+  opacity: 1;
+  translate: 0 0;
+}
+
+@media (min-width: 1024px) {
+  .pixel-lily {
+    --pixel: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pixel-lily {
+    --pixel: 2px;
+  }
 }
 
 .minimal-cursor {
@@ -1258,10 +1258,6 @@ a[role="button"]:hover {
   .minimal-contact {
     min-height: auto;
   }
-
-  .minimal-contact h2 {
-    font-size: clamp(4.3rem, 19vw, 7rem);
-  }
 }
 
 @media (max-width: 480px) {
@@ -1291,11 +1287,7 @@ a[role="button"]:hover {
   }
 
   .minimal-availability,
-  .minimal-availability:hover,
-  .minimal-contact__mail,
-  .minimal-contact__mail:hover,
-  .minimal-contact__mail span,
-  .minimal-contact nav a {
+  .minimal-availability:hover {
     transform: none;
     transition: none;
   }
@@ -1337,8 +1329,9 @@ a[role="button"]:hover {
   color: inherit;
 }
 
-/* Letter-board title (homepage hero) */
-.minimal-flap {
+/* Letter-board titles: the homepage hero and the contact title */
+.minimal-flap,
+.minimal-contact__title {
   display: grid;
   justify-items: start;
   gap: 0.18em;
@@ -1350,7 +1343,8 @@ a[role="button"]:hover {
   text-transform: uppercase;
 }
 
-.dark .minimal-flap {
+.dark .minimal-flap,
+.dark .minimal-contact__title {
   color: var(--minimal-fg);
 }
 
