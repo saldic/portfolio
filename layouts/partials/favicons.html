@@ -1,2 +1,8 @@
+{{/* The silver cat, as an SVG for browsers that take one and as an ICO for
+   those that don't (Safari, and anything asking for /favicon.ico). The
+   larger PNGs are for home screens. */}}
+<link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="32x32">
 <link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | relURL }}">
+<link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}">
+<link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
 <meta name="theme-color" content="#0d0e0e">
