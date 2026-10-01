@@ -1095,24 +1095,51 @@ a[role="button"]:hover {
   top: 0;
   left: 0;
   z-index: 100;
-  width: 0.42rem;
-  height: 0.42rem;
-  border-radius: 50%;
-  background: #fff;
-  mix-blend-mode: difference;
+  width: 18px;
+  height: 18px;
+  color: #686e74;
   opacity: 0;
   pointer-events: none;
-  transform: translate3d(-50%, -50%, 0);
-  transition: width 0.22s ease, height 0.22s ease, opacity 0.18s ease;
+  transition: opacity 0.18s ease;
+}
+
+.dark .minimal-cursor {
+  color: var(--minimal-fg);
 }
 
 .minimal-cursor.is-visible {
   opacity: 1;
 }
 
-.minimal-cursor.is-link {
-  width: 0.82rem;
-  height: 0.82rem;
+.minimal-cursor i {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border: 0 solid currentColor;
+}
+
+.minimal-cursor i:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-width: 1px 0 0 1px;
+}
+
+.minimal-cursor i:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-width: 1px 1px 0 0;
+}
+
+.minimal-cursor i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 1px 1px;
+}
+
+.minimal-cursor i:nth-child(4) {
+  right: 0;
+  bottom: 0;
+  border-width: 0 1px 1px 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1361,7 +1388,12 @@ a[role="button"]:hover {
   right: 0;
   left: 0;
   height: 50%;
-  clip-path: inset(0 -0.6em);
+  /* Cut each half off top and bottom on whole pixels, so the halves meet
+     without a seam, but let a wide letter spill out to the sides. Browsers
+     without overflow: clip fall back to hidden. */
+  overflow: hidden;
+  overflow-x: visible;
+  overflow-y: clip;
   backface-visibility: hidden;
 }
 
@@ -1376,9 +1408,13 @@ a[role="button"]:hover {
   white-space: pre;
 }
 
+/* The upper halves reach one pixel past the middle, so where the middle falls
+   between two screen pixels the halves overlap instead of leaving a faint
+   line through the letters. */
 .minimal-flap__half--under,
 .minimal-flap__half--top {
   top: 0;
+  height: calc(50% + 1px);
 }
 
 .minimal-flap__half--top,

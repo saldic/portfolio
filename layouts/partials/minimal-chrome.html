@@ -1,8 +1,8 @@
-<div class="minimal-cursor" aria-hidden="true"></div>
+<div class="minimal-cursor" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
 <script>
   // Shared by the minimal pages: smooth anchor scrolling, the scroll progress
-  // bar and the cursor dot.
+  // bar and the corner-bracket cursor.
   document.addEventListener("DOMContentLoaded", () => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -20,18 +20,40 @@
 
     if (!finePointer || reduceMotion) return;
 
+    // The cursor is a small frame of four corners around the pointer. Over a
+    // link or button it glides out to frame that element instead.
     const cursor = document.querySelector(".minimal-cursor");
+    const SIZE = 18; // px, the frame around the pointer
+    const AIR = { x: 7, y: 6 }; // px between a framed element and the corners
     let pointerX = window.innerWidth / 2;
     let pointerY = window.innerHeight / 2;
-    let cursorX = pointerX;
-    let cursorY = pointerY;
+    let x = pointerX;
+    let y = pointerY;
+    let width = SIZE;
+    let height = SIZE;
+    let framed = null;
 
     document.body.classList.add("minimal-cursor-ready");
 
     const animateCursor = () => {
-      cursorX += (pointerX - cursorX) * 0.18;
-      cursorY += (pointerY - cursorY) * 0.18;
-      cursor.style.translate = `${cursorX}px ${cursorY}px`;
+      let targetX = pointerX;
+      let targetY = pointerY;
+      let targetWidth = SIZE;
+      let targetHeight = SIZE;
+      if (framed?.isConnected) {
+        const box = framed.getBoundingClientRect();
+        targetX = box.left + box.width / 2;
+        targetY = box.top + box.height / 2;
+        targetWidth = box.width + AIR.x * 2;
+        targetHeight = box.height + AIR.y * 2;
+      }
+      x += (targetX - x) * 0.2;
+      y += (targetY - y) * 0.2;
+      width += (targetWidth - width) * 0.22;
+      height += (targetHeight - height) * 0.22;
+      cursor.style.translate = `${x - width / 2}px ${y - height / 2}px`;
+      cursor.style.width = `${width}px`;
+      cursor.style.height = `${height}px`;
       window.requestAnimationFrame(animateCursor);
     };
 
@@ -41,12 +63,11 @@
       cursor.classList.add("is-visible");
     }, { passive: true });
 
-    document.documentElement.addEventListener("mouseleave", () => cursor.classList.remove("is-visible"));
-
-    document.querySelectorAll("a, button").forEach((element) => {
-      element.addEventListener("pointerenter", () => cursor.classList.add("is-link"));
-      element.addEventListener("pointerleave", () => cursor.classList.remove("is-link"));
+    document.addEventListener("pointerover", (event) => {
+      framed = event.target.closest("a, button");
     });
+
+    document.documentElement.addEventListener("mouseleave", () => cursor.classList.remove("is-visible"));
 
     animateCursor();
   });
