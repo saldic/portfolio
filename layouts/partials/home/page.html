@@ -73,13 +73,21 @@
       </article>
     </div>
   </section>
+  <section class="minimal-story" aria-label="AI-driven applications">
+    <div class="minimal-story__stage">
+      <article class="minimal-story__lines">
+        <h2 data-story-step="1">“AIDA”</h2>
+        <p data-story-step="2">AI-driven applications</p>
+        <a data-story-step="3" href="{{ "projects/aida/" | relLangURL }}">Read about the process ↗</a>
+      </article>
+    </div>
+  </section>
   <script>
-    // Project story: the stage stays pinned while you scroll, and each scroll
+    // Project stories: each stage stays pinned while you scroll, and each scroll
     // step decodes more of the copy into place, line under line; scrolling
     // back up clears it again. With reduced motion the copy simply shows as
     // plain text.
-    (() => {
-      const story = document.currentScript.previousElementSibling;
+    document.querySelectorAll(".minimal-story").forEach((story) => {
       if (!minimalFlap) {
         minimalKeepCase(story);
         return;
@@ -195,7 +203,7 @@
         leaving = false;
         update();
       });
-    })();
+    });
   </script>
 
   <section id="about" class="minimal-section minimal-about" aria-labelledby="minimal-about-title">

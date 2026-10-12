@@ -2005,7 +2005,8 @@ html:has(.minimal-story.is-story) {
   top: clamp(1.4rem, 3vw, 2.4rem);
 }
 
-.minimal-article .exam-portfolio-pagination a + a {
+.minimal-article .exam-portfolio-pagination a + a,
+.minimal-article .exam-portfolio-pagination a + a:hover {
   padding-left: clamp(1.5rem, 4vw, 4rem);
   border-left: 1px solid var(--minimal-line);
 }
@@ -2075,7 +2076,8 @@ html:has(.minimal-story.is-story) {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .minimal-article .exam-portfolio-pagination a + a {
+  .minimal-article .exam-portfolio-pagination a + a,
+  .minimal-article .exam-portfolio-pagination a + a:hover {
     padding-left: 0;
     border-top: 1px solid var(--minimal-line);
     border-left: 0;
