@@ -1,5 +1,5 @@
 ---
-title: "AI-Driven Applications"
+title: "AI-Driven Applications (AIDA)"
 date: 2026-10-12
 weight: 5
 tags: ["aida"]
