@@ -115,11 +115,7 @@
         }
       });
     </script>
-    {{/* The RAG chatbot is on hold; remove this comment to bring it back.
-    {{ if hugo.IsDevelopment }}
-      {{- partial "dify-chatbot.html" . -}}
-    {{ end }}
-    */}}
+    {{- partial "dify-chatbot.html" . -}}
   </body>
   {{ if site.Params.buymeacoffee.globalWidget | default false }}
     <script

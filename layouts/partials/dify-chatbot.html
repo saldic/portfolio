@@ -1,0 +1,89 @@
+<script>
+  window.difyChatbotConfig = {
+    token: "Upi55v0k8roScW5Q",
+    baseUrl: "https://udify.app",
+    inputs: {},
+    systemVariables: {},
+    userVariables: {},
+  };
+</script>
+<script
+  src="https://udify.app/embed.min.js"
+  id="Upi55v0k8roScW5Q"
+  defer></script>
+<style>
+  #dify-chatbot-bubble-button {
+    width: 3.5rem !important;
+    height: 3.5rem !important;
+    border: 1px solid rgba(var(--theme-border-rgb), 0.9) !important;
+    border-radius: 1rem !important;
+    background: rgba(var(--theme-surface-strong-rgb), 0.9) !important;
+    color: var(--theme-accent) !important;
+    box-shadow:
+      0 1rem 2.5rem rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(18px) saturate(1.15);
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  }
+
+  #dify-chatbot-bubble-button:hover {
+    border-color: rgba(var(--theme-primary-rgb), 0.9) !important;
+    background: rgba(var(--theme-primary-rgb), 0.16) !important;
+    box-shadow:
+      0 1.25rem 3rem rgba(0, 0, 0, 0.22),
+      0 0 0 4px rgba(var(--theme-primary-rgb), 0.12) !important;
+    transform: translateY(-3px);
+  }
+
+  #dify-chatbot-bubble-button:focus-visible {
+    outline: 2px solid rgba(var(--theme-primary-rgb), 0.95) !important;
+    outline-offset: 3px !important;
+  }
+
+  #dify-chatbot-bubble-window {
+    width: 24rem !important;
+    height: 40rem !important;
+    border: 1px solid rgba(var(--theme-border-rgb), 0.9) !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.3) !important;
+  }
+
+  @media (max-width: 640px) {
+    #dify-chatbot-bubble-window {
+      width: calc(100vw - 2rem) !important;
+      height: min(40rem, calc(100vh - 6rem)) !important;
+    }
+  }
+</style>
+<script>
+  (() => {
+    const difyOrigin = new URL(window.difyChatbotConfig.baseUrl).origin;
+    let iframeReady = false;
+
+    window.addEventListener("message", (event) => {
+      if (
+        event.origin === difyOrigin &&
+        event.data?.type === "dify-chatbot-iframe-ready"
+      ) {
+        iframeReady = true;
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const button = document.getElementById("dify-chatbot-bubble-button");
+      if (!button) return;
+
+      button.setAttribute("aria-label", "Open portfolio assistant");
+
+      button.addEventListener("click", () => {
+        const iframe = document.getElementById("dify-chatbot-bubble-window");
+        if (!iframe || iframeReady || iframe.dataset.reloadAttempted) return;
+
+        iframe.dataset.reloadAttempted = "true";
+        window.requestAnimationFrame(() => {
+          if (!iframeReady) iframe.src = iframe.src;
+        });
+      });
+    });
+  })();
+</script>

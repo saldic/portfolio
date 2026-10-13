@@ -5,4 +5,5 @@ resources/
 node_modules/
 .env
 .venv/
-.rag-sync-state.json
+.rag-sync-state*.json
+__pycache__/
