@@ -12,6 +12,7 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">01</a>
   <a class="exam-portfolio-nav__link" href="../anatomy-of-chip/">02</a>
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../keeping-chip-up-to-date/">03</a>
+  <a class="exam-portfolio-nav__link" href="../interrogating-chip/">04</a>
 </div>
 
 ## A quality-of-life script
@@ -19,8 +20,6 @@ showReadingTime: true
 Chip only knows what's in its knowledge base in Dify. A new page is invisible to Chip until it's uploaded, and a changed page keeps its old version in Dify until it's uploaded again. Uploading by hand works for a few pages, but I wouldn't keep doing it, and Chip would slowly drift away from what the site says.
 
 The answer is `scripts/rag_sync.py`. It goes through every Markdown page in `content/`, works out which ones are new or changed, and sends only those to Dify's Knowledge API.
-
-## How it decides what to send
 
 For each page, the script:
 
@@ -56,8 +55,6 @@ flowchart LR
 
 The hash is calculated after the front matter is removed. So if I change a setting like `layout`, nothing is uploaded, because the text a visitor reads is the same. A new title or new tags are uploaded, because they're part of the header.
 
-The course's Toolbox page on integration and automation calls this **idempotence**. It means you can run the job twice, and the second run does no harm. The page splits it into three questions. Does the row already exist? Here, a page name maps to a Dify document ID. Has the content changed? That's what the hash is for. Has this exact processing already been done? The script only half answers that one. It doesn't record which embedding model or chunking rules were used, so if I switched embedding model, it wouldn't know that every page needed to be redone.
-
 ## Moving to Dify Cloud
 
 Until recently, Dify ran on my laptop, so Chip only worked on my own machine. To put Chip on the live site, I moved it to Dify Cloud and pointed the script at a new, empty knowledge base.
@@ -73,7 +70,7 @@ Skipped: 6
 Failed: 5
 ```
 
-The free plan allows **ten knowledge base requests per minute**. A minute later I ran the script again. The ten pages that were already there were skipped as unchanged, and only the five missing ones were created. This is idempotence in practice. The state file told the script which pages were already done.
+The free plan allows **ten knowledge base requests per minute**. A minute later I ran the script again. The ten pages that were already there were skipped as unchanged, and only the five missing ones were created.
 
 I don't want to have to run it twice, so the script now waits and tries again when it hits the limit. Dify answers with 403 instead of the usual 429, so the check looks at the message too:
 
@@ -127,5 +124,5 @@ It still has gaps. It **never deletes**, so a page I remove from the site stays 
 
 <div class="exam-portfolio-pagination">
   <a role="button" href="../anatomy-of-chip/">Previous Chapter</a>
-  <a role="button" href="../">Back To Overview</a>
+  <a role="button" href="../interrogating-chip/">Next Chapter</a>
 </div>

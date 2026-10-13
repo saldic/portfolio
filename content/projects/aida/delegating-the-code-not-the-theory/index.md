@@ -12,6 +12,7 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../delegating-the-code-not-the-theory/">01</a>
   <a class="exam-portfolio-nav__link" href="../anatomy-of-chip/">02</a>
   <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">03</a>
+  <a class="exam-portfolio-nav__link" href="../interrogating-chip/">04</a>
 </div>
 
 ## Who's driving?
@@ -36,7 +37,7 @@ I've since learned that the result depends on how clear my instructions are. The
 
 'Grill-me' worked the other way round. The AI asked the questions, and it kept going until  it reached questions we probably wouldn't have thought about until it was too late to change them easily. We answered yes or no, or told it to do something else. That made our own picture of the system clearer.
 
-Without grilling, an agent usually fills in open decisions with a default and writes it into the plan, and it's hard to tell that guess apart from an actual choice. The course slides on spec-driven development describe grilling as a way to build the theory, more than a way to produce the best possible spec. It's the most useful way I've used AI so far, and I stayed in the driver's seat the whole way.
+Without grill-me, an agent usually fills in open decisions with a default and writes it into the plan, and it's hard to tell that guess apart from an actual choice. Grill-me helped us build that shared understanding, which mattered more than getting a perfect spec. It's the most useful way I've used AI so far, and I stayed in the driver's seat the whole way.
 
 <div class="exam-portfolio-pagination">
   <a role="button" href="../">Back To Overview</a>
