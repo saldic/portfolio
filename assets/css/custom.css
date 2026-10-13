@@ -2216,3 +2216,44 @@ body:has(.minimal-article) .minimal-nav::before {
     transition: none !important;
   }
 }
+
+/* Tables in story pages: thin lines between rows and room around each cell. */
+.minimal-article__body > table {
+  width: 100%;
+  margin-top: 1.8rem;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+.minimal-article__body > table :is(th, td) {
+  padding: 0.75rem 1rem 0.75rem 0;
+  border-bottom: 1px solid var(--minimal-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.minimal-article__body > table :is(th, td):last-child {
+  padding-right: 0;
+}
+
+.minimal-article__body > table th {
+  color: var(--minimal-muted);
+  font-size: 0.72em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.minimal-article__body > table :is(th, td):first-child {
+  width: 1%;
+  padding-right: 1.2rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 800px) {
+  .minimal-article__body > table {
+    display: block;
+    overflow-x: auto;
+  }
+}
