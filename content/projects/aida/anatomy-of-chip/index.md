@@ -11,13 +11,14 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../">Overview</a>
   <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">01</a>
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../anatomy-of-chip/">02</a>
+  <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">03</a>
 </div>
 
 ## Chip the RAG-bot
 
 RAG stands for retrieval-augmented generation. Before the language model writes anything, the system finds the passages from my own pages that best match the question, and the model answers from those. A general model knows nothing about my projects, so without RAG it would make up something that sounds right.
 
-Before anyone asks anything, my pages have to get onto the site and into Chip's knowledge base. When I push to GitHub, GitHub Actions builds the site with Hugo and publishes it. On the same push, a second workflow runs the sync script, which sends new and changed pages to Dify. Dify then splits them into chunks and embeds them.
+My pages are Markdown files in the portfolio. When I push to GitHub, GitHub Actions builds the site with Hugo and publishes it. The same push starts a second workflow that runs the sync script. It sends new and changed pages to Dify, where they are split into chunks and embedded.
 
 When a visitor asks a question in the chat bubble, Dify runs Chip's chatflow. Chip runs on Dify Cloud, so it works on the live site.
 
@@ -75,7 +76,15 @@ This is the system prompt. `{{#context#}}` is where Dify inserts the chunks.
 >
 > Answer in the same language as the user.
 
-The first lines and the line about general knowledge are new. The old prompt said "my online portfolio", so Chip talked to visitors as if they were me. And when I asked what AIDA is, it explained the marketing model AIDA (Attention, Interest, Desire, Action), which isn't mentioned anywhere on my site. The old prompt said to answer from the context, but it didn't forbid the model from filling gaps with what it already knew. The prompt still has no rules for off-topic questions and no protection against someone telling it to ignore its instructions.
+Two parts of the prompt are new. The first line used to say:
+
+> You are an AI assistant for my online portfolio.
+
+Chip took "my" literally and talked to visitors as if they were me. Now it says:
+
+> You are Chip, an AI assistant on Dino Saldic's portfolio website.
+
+The line about general knowledge is also new. When I asked what AIDA is, Chip explained the marketing model AIDA (Attention, Interest, Desire, Action), which isn't mentioned anywhere on my site. The old prompt said to answer from the context, but it didn't forbid the model from filling gaps with what it already knew. The prompt still has no rules for off-topic questions and no protection against someone telling it to ignore its instructions.
 
 ## Memory, temperature and the answer
 
@@ -99,5 +108,5 @@ Most of Chip's settings came from what we used in class, and at first I hadn't t
 
 <div class="exam-portfolio-pagination">
   <a role="button" href="../delegating-the-code-not-the-theory/">Previous Chapter</a>
-  <a role="button" href="../">Back To Overview</a>
+  <a role="button" href="../keeping-chip-up-to-date/">Next Chapter</a>
 </div>

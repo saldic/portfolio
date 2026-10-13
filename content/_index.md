@@ -1,6 +1,6 @@
 ---
-title: "Dino Saldic — Full-stack Developer"
-description: "Full-stack developer portfolio featuring Java, React, API engineering, testing, and deployment."
+title: "Dino Saldic — Computer Science Student"
+description: "Computer science student with an interest in AI."
 ---
 
 I’m a Computer Science AP student in Copenhagen who enjoys understanding how complete products fit together—from data and APIs to the interface someone actually uses.
