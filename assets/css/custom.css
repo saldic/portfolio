@@ -2093,3 +2093,112 @@ body:has(.minimal-article) .minimal-nav::before {
   background: linear-gradient(var(--minimal-bg) 55%, transparent);
   content: "";
 }
+
+
+/* Focus mode on story pages: a button fades the section headings out and
+   lets the text take the middle of the page. Desktop only, since the text
+   already has the full width on small screens. */
+/* Leaving focus mode: the columns open first, then the headings fade in. */
+.minimal-article__body {
+  transition: grid-template-columns 0.5s ease, font-size 0.5s ease;
+}
+
+.minimal-article__body > h2 {
+  max-height: 30rem;
+  transition: opacity 0.4s ease 0.55s, max-height 0s linear 0.5s;
+}
+
+.minimal-focus-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  left: var(--minimal-gutter);
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.95rem;
+  border: 1px solid var(--minimal-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--minimal-bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--minimal-muted);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.minimal-focus-toggle:hover,
+.minimal-focus-toggle[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--minimal-fg) 45%, transparent);
+  color: var(--minimal-fg);
+}
+
+.minimal-focus-toggle:focus-visible {
+  outline: 2px solid var(--minimal-fg);
+  outline-offset: 3px;
+}
+
+.minimal-focus-toggle svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+
+.minimal-focus-toggle__side {
+  transition: opacity 0.35s ease;
+}
+
+.minimal-focus-toggle[aria-pressed="true"] .minimal-focus-toggle__side {
+  opacity: 0.25;
+}
+
+@media (min-width: 801px) {
+  /* Same columns as above (2fr and 3fr), written as lengths with an empty
+     third column, so the browser can animate them into focus mode. */
+  .minimal-article__body {
+    grid-template-columns: 40% 60% 0%;
+  }
+
+  /* Entering focus mode: the headings fade out first, then the columns
+     close and the text moves to the middle. */
+  .minimal-article--focus .minimal-article__body {
+    grid-template-columns:
+      calc((100% - min(40rem, 100%)) / 2)
+      min(40rem, 100%)
+      calc((100% - min(40rem, 100%)) / 2);
+    font-size: clamp(1.08rem, 1.35vw, 1.24rem);
+    transition: grid-template-columns 0.5s ease 0.3s, font-size 0.5s ease 0.3s;
+  }
+
+  .minimal-article--focus .minimal-article__body > h2 {
+    max-height: 0;
+    padding-right: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, max-height 0s linear 0.3s;
+  }
+}
+
+@media (max-width: 800px) {
+  .minimal-focus-toggle {
+    display: none;
+  }
+}
+
+.minimal-article--no-anim .minimal-article__body,
+.minimal-article--no-anim .minimal-article__body > h2 {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .minimal-article__body,
+  .minimal-article__body > h2,
+  .minimal-focus-toggle__side {
+    transition: none !important;
+  }
+}

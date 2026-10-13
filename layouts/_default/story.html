@@ -39,7 +39,37 @@
     <nav class="minimal-article__back" aria-label="Back">
       <a href="{{ $backURL }}"><span aria-hidden="true">←</span> {{ $backLabel }}</a>
     </nav>
+    <button type="button" class="minimal-focus-toggle" aria-pressed="false">
+      <svg viewBox="0 0 20 14" width="18" height="13" aria-hidden="true" focusable="false">
+        <rect class="minimal-focus-toggle__side" x="1" y="1" width="5" height="12" rx="1.5"/>
+        <rect x="8" y="1" width="11" height="12" rx="1.5"/>
+      </svg>
+      <span class="minimal-focus-toggle__label">Focus</span>
+    </button>
   </article>
+  <script>
+    // Focus mode: the section headings fade out and the text moves to the
+    // middle. The choice is remembered in this browser.
+    (() => {
+      const article = document.querySelector(".minimal-article");
+      const button = article && article.querySelector(".minimal-focus-toggle");
+      if (!button) return;
+      const label = button.querySelector(".minimal-focus-toggle__label");
+      const set = (on) => {
+        article.classList.toggle("minimal-article--focus", on);
+        button.setAttribute("aria-pressed", String(on));
+        label.textContent = on ? "Show headings" : "Focus";
+        try { localStorage.setItem("storyFocus", on ? "1" : "0"); } catch (error) {}
+      };
+      let start = false;
+      try { start = localStorage.getItem("storyFocus") === "1"; } catch (error) {}
+      // A remembered choice is applied without animation when the page opens.
+      article.classList.add("minimal-article--no-anim");
+      set(start);
+      requestAnimationFrame(() => requestAnimationFrame(() => article.classList.remove("minimal-article--no-anim")));
+      button.addEventListener("click", () => set(!article.classList.contains("minimal-article--focus")));
+    })();
+  </script>
   <script>
     // Story page: the title decodes in on arrival, and each section heading
     // decodes in once, when it scrolls into view. With reduced motion they
