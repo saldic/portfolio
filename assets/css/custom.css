@@ -2108,6 +2108,10 @@ body:has(.minimal-article) .minimal-nav::before {
   transition: opacity 0.4s ease 0.55s, max-height 0s linear 0.5s;
 }
 
+.minimal-article__body > :is(pre.mermaid, .highlight-wrapper, p:has(> img)) {
+  transition: margin 0.5s ease;
+}
+
 .minimal-focus-toggle {
   position: fixed;
   bottom: 1.5rem;
@@ -2182,6 +2186,16 @@ body:has(.minimal-article) .minimal-nav::before {
     pointer-events: none;
     transition: opacity 0.3s ease, max-height 0s linear 0.3s;
   }
+
+  /* Diagrams, code and screenshots stay large: they reach up to 10rem past
+     the text column on each side, as far as the screen allows. */
+  .minimal-article--focus .minimal-article__body > :is(pre.mermaid, .highlight-wrapper, p:has(> img)) {
+    --focus-bleed: min(10rem, max(0rem, calc((100vw - 40rem) / 2 - var(--minimal-gutter) - 1rem)));
+    max-width: none;
+    margin-right: calc(-1 * var(--focus-bleed));
+    margin-left: calc(-1 * var(--focus-bleed));
+    transition: margin 0.5s ease 0.3s;
+  }
 }
 
 @media (max-width: 800px) {
@@ -2191,13 +2205,13 @@ body:has(.minimal-article) .minimal-nav::before {
 }
 
 .minimal-article--no-anim .minimal-article__body,
-.minimal-article--no-anim .minimal-article__body > h2 {
+.minimal-article--no-anim .minimal-article__body > * {
   transition: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .minimal-article__body,
-  .minimal-article__body > h2,
+  .minimal-article__body > *,
   .minimal-focus-toggle__side {
     transition: none !important;
   }
