@@ -39,6 +39,7 @@
     <nav class="minimal-article__back" aria-label="Back">
       <a href="{{ $backURL }}"><span aria-hidden="true">←</span> {{ $backLabel }}</a>
     </nav>
+    {{ if .IsPage }}
     <button type="button" class="minimal-focus-toggle" aria-pressed="false">
       <svg viewBox="0 0 20 14" width="18" height="13" aria-hidden="true" focusable="false">
         <rect class="minimal-focus-toggle__side" x="1" y="1" width="5" height="12" rx="1.5"/>
@@ -46,6 +47,7 @@
       </svg>
       <span class="minimal-focus-toggle__label">Focus</span>
     </button>
+    {{ end }}
   </article>
   <script>
     // Focus mode: the section headings fade out and the text moves to the

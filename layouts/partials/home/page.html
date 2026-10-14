@@ -1,6 +1,6 @@
 {{ partial "flap-kit.html" . }}
 
-<div class="minimal-home minimal-home--clean-sections">
+<div class="minimal-home">
   <section class="minimal-hero" aria-label="Dino Saldic">
     <h1 class="minimal-flap" tabindex="0">
       <span class="minimal-flap__line">Dino Saldic</span>
@@ -206,51 +206,14 @@
     });
   </script>
 
-  <section id="about" class="minimal-section minimal-about" aria-labelledby="minimal-about-title">
-    <p class="minimal-label"><span>01</span> About</p>
-    <div class="minimal-about__content">
-      <h2 id="minimal-about-title">I build software<br>to understand it.</h2>
-      <div class="minimal-about__copy">
-        <div class="prose dark:prose-invert">{{ .Content }}</div>
-        <p class="minimal-stack">Java · REST APIs · Databases · Security · React · Deployment</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="work" class="minimal-section minimal-work" aria-labelledby="minimal-work-title">
-    <div class="minimal-work__heading">
-      <p class="minimal-label"><span>02</span> Selected work</p>
-      <h2 id="minimal-work-title">One project.<br>Several lessons.</h2>
-    </div>
-
-    <a class="minimal-feature" href="{{ "projects/eru-project/what-is-eru/" | relLangURL }}" aria-label="Read the story behind eru" data-tilt>
-      <figure><img src="{{ "images/mainscreen.png" | relURL }}" alt="The eru learning platform interface" loading="lazy"></figure>
-      <div class="minimal-feature__copy">
-        <p><span>01</span><span>eru · 2026</span></p>
-        <h3>A healthier way<br>to keep scrolling.</h3>
-        <span>Product idea, design and development <b aria-hidden="true">↗</b></span>
-      </div>
-    </a>
-
-    <nav class="minimal-project-list" aria-label="Project case studies">
-      <a href="{{ "projects/eru-project/exam-portfolio/" | relLangURL }}">
-        <span>02</span><strong>Backend process</strong><small>API · Security · Testing · Docker</small><b aria-hidden="true">↗</b>
-      </a>
-      <a href="{{ "projects/eru-project/frontend-process/" | relLangURL }}">
-        <span>03</span><strong>Frontend process</strong><small>React · Routes · Authentication</small><b aria-hidden="true">↗</b>
-      </a>
-    </nav>
-  </section>
-
   <section id="contact" class="minimal-contact" aria-labelledby="minimal-contact-title">
     <h2 id="minimal-contact-title" class="minimal-contact__title">Let’s talk</h2>
     <nav class="minimal-contact__links" aria-label="Contact">
       <a class="minimal-contact__link" href="mailto:dinosaldic.tech@gmail.com">dinosaldic.tech@gmail.com</a>
       <a class="minimal-contact__link" href="https://github.com/saldic" target="_blank" rel="noopener noreferrer">GitHub</a>
       <a class="minimal-contact__link" href="https://www.linkedin.com/in/dinosaldic/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      {{/* The lily stands on the line above the links, at the right. */}}
-      {{ partial "pixel-lily.html" . }}
     </nav>
+    {{ partial "contact-badge.html" . }}
   </section>
   <script>
     // Contact: the title decodes in once, when the section scrolls into view.
@@ -269,41 +232,3 @@
 </div>
 
 {{ partial "minimal-chrome.html" . }}
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
-    if (!reduceMotion && "IntersectionObserver" in window) {
-      const targets = document.querySelectorAll(".minimal-about__content, .minimal-work__heading, .minimal-feature, .minimal-project-list a");
-      targets.forEach((element) => element.classList.add("minimal-reveal"));
-      const observer = new IntersectionObserver(
-        (entries) => entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        }),
-        { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
-      );
-      targets.forEach((element) => observer.observe(element));
-    }
-
-    if (finePointer && !reduceMotion) {
-      document.querySelectorAll("[data-tilt]").forEach((element) => {
-        element.addEventListener("pointermove", (event) => {
-          const bounds = element.getBoundingClientRect();
-          const x = Math.min(Math.max((event.clientX - bounds.left) / bounds.width, 0), 1);
-          const y = Math.min(Math.max((event.clientY - bounds.top) / bounds.height, 0), 1);
-          element.style.setProperty("--minimal-tilt-x", `${(0.5 - y) * 1.4}deg`);
-          element.style.setProperty("--minimal-tilt-y", `${(x - 0.5) * 1.4}deg`);
-        }, { passive: true });
-        element.addEventListener("pointerleave", () => {
-          element.style.setProperty("--minimal-tilt-x", "0deg");
-          element.style.setProperty("--minimal-tilt-y", "0deg");
-        });
-      });
-    }
-  });
-</script>

@@ -44,8 +44,10 @@
         const box = framed.getBoundingClientRect();
         targetX = box.left + box.width / 2;
         targetY = box.top + box.height / 2;
-        targetWidth = box.width + AIR.x * 2;
-        targetHeight = box.height + AIR.y * 2;
+        // Large cards and chapter buttons are framed exactly on their edge.
+        const air = framed.matches(".exam-week-card, .eru-repo-card, .exam-portfolio-pagination a") ? { x: 0, y: 0 } : AIR;
+        targetWidth = box.width + air.x * 2;
+        targetHeight = box.height + air.y * 2;
       }
       x += (targetX - x) * 0.2;
       y += (targetY - y) * 0.2;

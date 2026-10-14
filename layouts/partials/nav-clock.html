@@ -1,0 +1,46 @@
+{{/* The time in Copenhagen in the middle of the top bar, set in the same
+   blackletter as the badge. */}}
+<div class="minimal-clock" aria-hidden="true">
+  <span class="minimal-clock__time"></span>
+  <span class="minimal-clock__note">Copenhagen</span>
+</div>
+<script>
+  // Every character sits in a box of its own, so the clock does not shift
+  // sideways when a narrow digit turns into a wide one.
+  (() => {
+    const root = document.currentScript.previousElementSibling;
+    const clock = root.querySelector(".minimal-clock__time");
+    const format = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Copenhagen", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" });
+    const cells = [];
+    const show = () => {
+      [...format.format(new Date())].forEach((char, i) => {
+        if (!cells[i]) {
+          cells[i] = document.createElement("span");
+          cells[i].className = char === ":" ? "minimal-clock__colon" : "minimal-clock__digit";
+          clock.append(cells[i]);
+        }
+        if (cells[i].textContent !== char) cells[i].textContent = char;
+      });
+    };
+    show();
+    window.setInterval(show, 1000);
+
+    // Hovering shows where the time is from. The note decodes in like the
+    // rest of the text; the letter board is set up further down the page,
+    // so it is looked up only when it is needed.
+    const note = root.querySelector(".minimal-clock__note");
+    let letters;
+    root.addEventListener("pointerenter", () => {
+      if (typeof minimalFlap === "undefined" || !minimalFlap) return;
+      if (!letters) {
+        const chars = [...minimalCaps(note.textContent.trim())];
+        letters = minimalFlap.build(note).map((cell, i) => ({ cell, char: chars[i] }));
+        minimalFlap.fitCells(letters, note);
+      }
+      letters.forEach(({ cell, char }, i) => {
+        minimalFlap.settle(cell, " ", 0);
+        window.setTimeout(() => minimalFlap.settle(cell, char, 5), 80 + i * 25);
+      });
+    });
+  })();
+</script>

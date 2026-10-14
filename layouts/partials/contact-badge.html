@@ -1,0 +1,94 @@
+{{/* The badge beside the contact links. It is built from superBadge.svg,
+   path by path, so parts of it can move: the cat is drawn three times,
+   each copy clipped to one part (the body, the raised paw and the tail in
+   two pieces), and the waves, the name, the lilies and the two
+   "Copenhagen" texts get groups of their own. The line of text under
+   the shield (path 17) is left out. */}}
+{{ $paths := findRE `<path[^>]*/>` (resources.Get "images/superBadge.svg").Content }}
+<div class="minimal-badge" aria-hidden="true">
+  <svg viewBox="0 0 960 1180">
+    <defs>
+      <clipPath id="minimal-badge-body">
+        <path clip-rule="evenodd" d="M0 0H960V1180H0Z M570 258H730V464H570Z M230 248L330 248L380 338L380 418L230 418Z" />
+      </clipPath>
+      <clipPath id="minimal-badge-paw"><path d="M230 248L330 248L380 338L380 418L230 418Z" /></clipPath>
+      <clipPath id="minimal-badge-tail-base"><path d="M570 364H730V474H570Z" /></clipPath>
+      <clipPath id="minimal-badge-tail-tip"><path d="M570 258H730V372H570Z" /></clipPath>
+    </defs>
+    {{ range $i, $path := $paths }}
+      {{ $path = $path | replaceRE `fill="#[0-9A-Fa-f]+"` `fill="currentColor"` }}
+      {{ if eq $i 16 }}
+        {{ $d := index (findRESubmatch ` d="([^"]+)"` $path 1) 0 1 }}
+        <g class="minimal-badge__cat">
+          <path fill-rule="evenodd" clip-path="url(#minimal-badge-body)" d="{{ $d }}" fill="currentColor" />
+          <g class="minimal-badge__paw"><path fill-rule="evenodd" clip-path="url(#minimal-badge-paw)" d="{{ $d }}" fill="currentColor" /></g>
+          <g class="minimal-badge__tail">
+            <path fill-rule="evenodd" clip-path="url(#minimal-badge-tail-base)" d="{{ $d }}" fill="currentColor" />
+            <g class="minimal-badge__tail-tip"><path fill-rule="evenodd" clip-path="url(#minimal-badge-tail-tip)" d="{{ $d }}" fill="currentColor" /></g>
+          </g>
+        </g>
+      {{ else if in (slice 11 15 18) $i }}
+        <g class="minimal-badge__wave">{{ $path | safeHTML }}</g>
+      {{ else if in (slice 13 14) $i }}
+        <g class="minimal-badge__place">{{ $path | safeHTML }}</g>
+      {{ else if eq $i 12 }}
+        <g class="minimal-badge__name">{{ $path | safeHTML }}</g>
+      {{ else if or (le $i 4) (and (ge $i 6) (le $i 10)) }}
+        <g class="minimal-badge__lily">{{ $path | safeHTML }}</g>
+      {{ else if ne $i 17 }}
+        {{ $path | safeHTML }}
+      {{ end }}
+    {{ end }}
+  </svg>
+</div>
+<script>
+  // While the badge is hovered the cat lights up, waves hello with its paw
+  // and swishes its tail, and the waves under it rock. The motion fades in
+  // and out instead of stopping dead when the pointer leaves.
+  (() => {
+    const badge = document.currentScript.previousElementSibling;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const base = badge.querySelector(".minimal-badge__tail");
+    const tip = badge.querySelector(".minimal-badge__tail-tip");
+    const paw = badge.querySelector(".minimal-badge__paw");
+    const waves = [...badge.querySelectorAll(".minimal-badge__wave")];
+    let strength = 0;
+    let target = 0;
+    let running = false;
+    let last = 0;
+
+    const tick = (time) => {
+      const delta = Math.min(time - last, 50);
+      last = time;
+      strength += Math.sign(target - strength) * Math.min(Math.abs(target - strength), delta / 400);
+      const swish = Math.sin(time / 260);
+      base.style.rotate = `${swish * 7 * strength}deg`;
+      tip.style.rotate = `${Math.sin(time / 260 - 0.9) * 16 * strength}deg`;
+      waves.forEach((wave, i) => {
+        wave.style.translate = `0 ${Math.sin(time / 520 + i * 1.3) * 10 * strength}px`;
+      });
+      running = strength > 0 || target > 0;
+      if (running) window.requestAnimationFrame(tick);
+    };
+
+    badge.addEventListener("pointerenter", () => {
+      target = 1;
+      // A wave hello each time someone comes by.
+      paw.classList.remove("is-waving");
+      void paw.getBoundingClientRect();
+      paw.classList.add("is-waving");
+      if (!running) {
+        running = true;
+        window.requestAnimationFrame((time) => {
+          last = time;
+          tick(time);
+        });
+      }
+    });
+    badge.addEventListener("pointerleave", () => {
+      target = 0;
+    });
+    paw.addEventListener("animationend", () => paw.classList.remove("is-waving"));
+  })();
+</script>

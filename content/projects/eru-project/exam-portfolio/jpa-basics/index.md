@@ -202,8 +202,9 @@ So `ContentDAO` and `ContentType` may look small on their own, but together they
 
 ## JPA Lifecycle States
 
-![JPA lifecycle states and the Goblin Banker](/portfolio/images/GoblinBanker.png)
-Screenshot from Jon Bertelsen's teaching video `# 03-jpa-basics-entity-lifecycle`, taken by the author.
+![JPA lifecycle states and the Goblin Banker](/images/GoblinBanker.png)
+
+*Screenshot from Jon Bertelsen's teaching video "03-jpa-basics-entity-lifecycle", taken by the author.*
 
 This diagram shows the four lifecycle states of a JPA entity and how the `EntityManager` aka `Goblin Banker` controls them and delegates these different states to them.
 

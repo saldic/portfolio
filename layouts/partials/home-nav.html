@@ -3,22 +3,21 @@
     {{ (resources.Get "images/justCat.svg").Content | replaceRE `fill="#[0-9A-Fa-f]+"` `fill="currentColor"` | replaceRE `<svg ` `<svg aria-hidden="true" ` | safeHTML }}
   </a>
 
+  {{ partial "nav-clock.html" . }}
+
   <div class="minimal-nav-menu" data-minimal-menu>
     <nav id="minimal-menu-panel" class="minimal-nav-menu__panel" aria-label="Primary navigation">
       <div class="minimal-nav-menu__links">
         {{ $home := cond .IsHome "" (relLangURL "") }}
-        <a href="{{ $home }}#projects">Projects</a>
-        <a href="{{ $home }}#about">About me</a>
+        {{/* Hovering "projects" folds out the two projects under it. */}}
+        <div class="minimal-nav-menu__group">
+          <a href="{{ $home }}#projects">Projects</a>
+          <div class="minimal-nav-menu__sub">
+            <a href="{{ "projects/eru-project/what-is-eru/" | relLangURL }}">eru</a>
+            <a href="{{ "projects/aida/" | relLangURL }}">“aida”</a>
+          </div>
+        </div>
         <a href="{{ $home }}#contact">Contact</a>
-        <button
-          id="appearance-switcher"
-          class="minimal-nav__theme"
-          type="button"
-          aria-label="Switch between light and dark mode"
-          title="Switch between light and dark mode">
-          <span class="dark:hidden" aria-hidden="true">Dark</span>
-          <span class="hidden dark:inline" aria-hidden="true">Light</span>
-        </button>
       </div>
     </nav>
 
@@ -28,9 +27,11 @@
       aria-expanded="false"
       aria-controls="minimal-menu-panel"
       aria-label="Open menu">
-      <span class="minimal-nav-menu__dots" aria-hidden="true">
-        <i></i><i></i><i></i>
-      </span>
+      {{/* The fleur-de-lis from the top right corner of the badge. */}}
+      {{ $badge := findRE `<path[^>]*/>` (resources.Get "images/superBadge.svg").Content }}
+      <svg class="minimal-nav-menu__lily" viewBox="797 68 79 79" aria-hidden="true">
+        {{ range first 5 $badge }}{{ . | replaceRE `fill="#[0-9A-Fa-f]+"` `fill="currentColor"` | safeHTML }}{{ end }}
+      </svg>
     </button>
   </div>
 </header>

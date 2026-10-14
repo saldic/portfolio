@@ -52,3 +52,19 @@ cascade:
   </a>
 
 </div>
+
+<div class="exam-repo-grid">
+
+  <a class="exam-week-card" href="https://github.com/EmilXavierVT/Supavisor" target="_blank" rel="noopener">
+    <p class="exam-week-card__eyebrow">GitHub</p>
+    <h3 class="exam-week-card__title">Supavisor backend</h3>
+    <p class="exam-week-card__body">The Java and Javalin REST API with PostgreSQL, including the specification from the grill-me session.</p>
+  </a>
+
+  <a class="exam-week-card" href="https://github.com/EmilXavierVT/SupavisorFront" target="_blank" rel="noopener">
+    <p class="exam-week-card__eyebrow">GitHub</p>
+    <h3 class="exam-week-card__title">Supavisor frontend</h3>
+    <p class="exam-week-card__body">The React frontend built from the Figma Make design.</p>
+  </a>
+
+</div>

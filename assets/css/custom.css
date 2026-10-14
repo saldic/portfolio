@@ -459,8 +459,6 @@ a[role="button"]:hover {
   --minimal-fg: #0d0e0e;
   --minimal-muted: rgba(13, 14, 14, 0.56);
   --minimal-line: rgba(13, 14, 14, 0.2);
-  --minimal-panel: #e9eae7;
-  --minimal-green: #27352a;
   --minimal-gutter: clamp(1.4rem, 4vw, 4.2rem);
   background: var(--minimal-bg) !important;
   color: var(--minimal-fg) !important;
@@ -473,7 +471,6 @@ a[role="button"]:hover {
   --minimal-fg: #c9cdd2;
   --minimal-muted: rgba(201, 205, 210, 0.54);
   --minimal-line: rgba(201, 205, 210, 0.18);
-  --minimal-panel: #171918;
 }
 
 .minimal-body :where(h1, h2, h3, p, figure) {
@@ -534,31 +531,23 @@ a[role="button"]:hover {
   display: flex;
   width: 2.9rem;
   height: 2.9rem;
-  border: 1px solid var(--minimal-line);
-  border-radius: 999px;
   justify-content: flex-end;
-  background: color-mix(in srgb, var(--minimal-bg) 88%, transparent);
-  box-shadow: 0 0.8rem 2.5rem rgba(0, 0, 0, 0.08);
-  overflow: hidden;
+  overflow: visible; /* room for the projects to fold out below */
   pointer-events: auto;
-  transition:
-    width 0.62s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.25s ease,
-    background-color 0.25s ease;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  transition: width 0.62s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Open, the links slide out to the left of the lily, with no box around. */
 .minimal-nav-menu.is-open {
-  width: min(36rem, calc(100vw - (var(--minimal-gutter) * 2)));
-  border-color: color-mix(in srgb, var(--minimal-fg) 32%, transparent);
+  width: min(16rem, calc(100vw - (var(--minimal-gutter) * 2)));
 }
 
 .minimal-nav-menu__panel {
+  display: flex;
   min-width: 0;
   flex: 1;
+  justify-content: flex-end; /* the links stay against the lily, even closed */
   opacity: 0;
-  overflow: hidden;
   transform: translateX(0.7rem);
   transition:
     opacity 0.22s ease,
@@ -573,25 +562,29 @@ a[role="button"]:hover {
 
 .minimal-nav-menu__links {
   display: flex;
-  min-width: 31rem;
+  min-width: 12.5rem;
   height: 100%;
-  padding-left: 1.35rem;
+  padding: 0 0.4rem 0 1.35rem;
   align-items: center;
-  justify-content: space-around;
-  gap: clamp(0.7rem, 2vw, 1.5rem);
+  justify-content: flex-end;
+  gap: 1.5rem;
   white-space: nowrap;
 }
 
+/* The menu links are set in lowercase blackletter, like the badge and the
+   clock. */
 .minimal-nav-menu__links :where(a, button) {
   position: relative;
   border: 0;
   background: transparent;
   color: var(--minimal-muted);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-family: "UnifrakturMaguntia", serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1;
   text-decoration: none;
-  text-transform: uppercase;
+  text-transform: lowercase;
 }
 
 .minimal-nav-menu__links :where(a, button)::after {
@@ -630,24 +623,20 @@ a[role="button"]:hover {
   color: var(--minimal-fg);
 }
 
-.minimal-nav-menu__dots {
-  display: flex;
-  align-items: center;
-  gap: 0.22rem;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.minimal-nav-menu__dots i {
+/* The menu button is the fleur-de-lis from the badge. It lights up white
+   while the menu is open and gives a small lift. */
+.minimal-nav-menu__lily {
   display: block;
-  width: 0.25rem;
-  height: 0.25rem;
-  border-radius: 50%;
-  background: currentColor;
-  transition: transform 0.35s ease, opacity 0.25s ease;
+  width: 1.5rem;
+  height: 1.5rem;
+  transition:
+    color 0.3s ease,
+    translate 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.minimal-nav-menu.is-open .minimal-nav-menu__dots {
-  transform: rotate(90deg);
+.minimal-nav-menu.is-open .minimal-nav-menu__lily {
+  color: #ffffff;
+  translate: 0 -0.12rem;
 }
 
 .minimal-nav__theme {
@@ -735,11 +724,6 @@ a[role="button"]:hover {
   transform-origin: left;
 }
 
-.minimal-section {
-  padding: clamp(7rem, 13vw, 13rem) var(--minimal-gutter);
-  border-top: 1px solid var(--minimal-line);
-}
-
 .minimal-label {
   color: var(--minimal-muted);
   font-size: 0.62rem;
@@ -753,187 +737,6 @@ a[role="button"]:hover {
   color: var(--minimal-fg);
 }
 
-.minimal-about__content {
-  display: grid;
-  margin-top: clamp(3.5rem, 7vw, 7rem);
-  grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.65fr);
-  align-items: end;
-  gap: clamp(3rem, 9vw, 9rem);
-}
-
-.minimal-about h2,
-.minimal-work h2 {
-  color: var(--minimal-fg);
-  font-size: clamp(3.1rem, 8vw, 8.3rem);
-  font-weight: 700;
-  letter-spacing: -0.075em;
-  line-height: 0.88;
-}
-
-.minimal-about__copy {
-  max-width: 36rem;
-}
-
-.minimal-about__copy .prose {
-  color: var(--minimal-muted);
-  font-family: inherit;
-  font-size: clamp(0.92rem, 1.25vw, 1.05rem);
-  line-height: 1.8;
-}
-
-.minimal-about__copy .prose p {
-  margin-bottom: 1.1rem;
-}
-
-.minimal-stack {
-  margin-top: 2rem !important;
-  padding-top: 1rem;
-  border-top: 1px solid var(--minimal-line);
-  color: var(--minimal-fg);
-  font-size: 0.68rem;
-  line-height: 1.8;
-}
-
-.minimal-work__heading {
-  display: grid;
-  grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr);
-  align-items: start;
-  gap: 2rem;
-}
-
-.minimal-feature {
-  --minimal-tilt-x: 0deg;
-  --minimal-tilt-y: 0deg;
-  display: grid;
-  min-height: min(72vh, 50rem);
-  margin-top: clamp(4rem, 9vw, 9rem);
-  border: 1px solid var(--minimal-line);
-  background: var(--minimal-panel);
-  grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.55fr);
-  color: var(--minimal-fg);
-  overflow: hidden;
-  text-decoration: none;
-  transform: perspective(1400px) rotateX(var(--minimal-tilt-x)) rotateY(var(--minimal-tilt-y));
-  transform-style: preserve-3d;
-  transition: transform 0.2s ease-out, border-color 0.3s ease;
-}
-
-.minimal-feature:hover {
-  border-color: var(--minimal-fg);
-  text-decoration: none;
-}
-
-.minimal-feature figure {
-  min-height: 32rem;
-  background: #111;
-  overflow: hidden;
-}
-
-.minimal-feature img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s ease;
-}
-
-.minimal-feature:hover img {
-  filter: saturate(0.8) contrast(1.04);
-  transform: scale(1.025);
-}
-
-.minimal-feature__copy {
-  display: flex;
-  padding: clamp(1.4rem, 3vw, 2.7rem);
-  flex-direction: column;
-  justify-content: space-between;
-  transform: translateZ(1rem);
-}
-
-.minimal-feature__copy > p {
-  display: flex;
-  justify-content: space-between;
-  color: var(--minimal-muted);
-  font-size: 0.58rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.minimal-feature h3 {
-  margin: auto 0;
-  color: var(--minimal-fg);
-  font-size: clamp(2.4rem, 5vw, 5.2rem);
-  font-weight: 700;
-  letter-spacing: -0.07em;
-  line-height: 0.88;
-}
-
-.minimal-feature__copy > span {
-  display: flex;
-  justify-content: space-between;
-  padding-top: 1rem;
-  border-top: 1px solid var(--minimal-line);
-  color: var(--minimal-fg);
-  font-size: 0.66rem;
-}
-
-.minimal-feature b,
-.minimal-project-list b {
-  transition: transform 0.25s ease;
-}
-
-.minimal-feature:hover b,
-.minimal-project-list a:hover b {
-  transform: rotate(45deg);
-}
-
-.minimal-project-list {
-  display: grid;
-  margin-top: clamp(3rem, 6vw, 6rem);
-  border-top: 1px solid var(--minimal-line);
-}
-
-.minimal-project-list a {
-  display: grid;
-  padding: clamp(1.2rem, 2.4vw, 2rem) 0;
-  border-bottom: 1px solid var(--minimal-line);
-  grid-template-columns: 4rem minmax(12rem, 0.85fr) minmax(12rem, 1.15fr) auto;
-  align-items: center;
-  gap: 1rem;
-  color: var(--minimal-fg);
-  text-decoration: none;
-  transition: padding 0.25s ease, background-color 0.25s ease, color 0.25s ease;
-}
-
-.minimal-project-list a:hover {
-  padding-right: 1.2rem;
-  padding-left: 1.2rem;
-  background: var(--minimal-green);
-  color: #c9cdd2;
-}
-
-.minimal-project-list a > span,
-.minimal-project-list small {
-  color: var(--minimal-muted);
-  font-size: 0.6rem;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.minimal-project-list a:hover > span,
-.minimal-project-list a:hover small {
-  color: rgba(201, 205, 210, 0.58);
-}
-
-.minimal-project-list strong {
-  font-size: clamp(1.25rem, 2.4vw, 2.15rem);
-  font-weight: 600;
-  letter-spacing: -0.04em;
-}
-
-.minimal-project-list b {
-  font-size: 1.2rem;
-}
-
 .minimal-contact {
   position: relative;
   display: flex;
@@ -945,11 +748,6 @@ a[role="button"]:hover {
   border-top: 1px solid var(--minimal-line);
   background: var(--minimal-bg);
   color: var(--minimal-fg);
-}
-
-.minimal-home--clean-sections .minimal-about,
-.minimal-home--clean-sections .minimal-work {
-  display: none;
 }
 
 .minimal-contact__title {
@@ -1005,89 +803,6 @@ a[role="button"]:hover {
   outline: 1px solid currentColor;
   outline-offset: 0.4rem;
   box-shadow: none;
-}
-
-/* A pixel-art lily in a flower pot, standing on the line above the contact
-   links, and a link to email too. Its pixels are whole screen pixels, so the
-   art stays crisp. */
-.pixel-lily {
-  --pixel: 3px;
-  position: absolute;
-  right: 0;
-  bottom: calc(100% + 1px);
-  width: calc(21 * var(--pixel));
-  height: calc(30 * var(--pixel));
-  color: #686e74;
-  text-decoration: none;
-}
-
-.pixel-lily:hover {
-  text-decoration: none;
-}
-
-.pixel-lily:focus-visible {
-  outline: 1px solid currentColor;
-  outline-offset: 0.4rem;
-  box-shadow: none;
-}
-
-.dark .pixel-lily {
-  color: var(--minimal-fg);
-}
-
-.pixel-lily svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  fill: currentColor;
-}
-
-.pixel-lily__tone-2 {
-  fill-opacity: 0.72;
-}
-
-.pixel-lily__tone-3 {
-  fill-opacity: 0.48;
-}
-
-.pixel-lily__tone-4 {
-  fill-opacity: 0.32;
-}
-
-/* "Help me grow", beside the flower while it blooms. */
-.pixel-lily__note {
-  position: absolute;
-  top: calc(2 * var(--pixel));
-  right: calc(100% + 2 * var(--pixel));
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  line-height: 1.2;
-  opacity: 0;
-  pointer-events: none;
-  text-transform: uppercase;
-  translate: 0.5rem 0;
-  transition:
-    opacity 0.25s ease,
-    translate 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-  white-space: nowrap;
-}
-
-.pixel-lily.is-open .pixel-lily__note {
-  opacity: 1;
-  translate: 0 0;
-}
-
-@media (min-width: 1024px) {
-  .pixel-lily {
-    --pixel: 4px;
-  }
-}
-
-@media (max-width: 480px) {
-  .pixel-lily {
-    --pixel: 2px;
-  }
 }
 
 .minimal-cursor {
@@ -1167,45 +882,6 @@ a[role="button"]:hover {
   letter-spacing: 0.05em;
 }
 
-.minimal-reveal {
-  opacity: 0;
-  translate: 0 2rem;
-  transition: opacity 0.75s ease, translate 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.minimal-reveal.is-visible {
-  opacity: 1;
-  translate: 0 0;
-}
-
-@keyframes minimal-reveal-from-left {
-  from { opacity: 0; transform: translateX(-1rem); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes minimal-reveal-from-right {
-  from { opacity: 0; transform: translateX(1rem); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes minimal-reveal-from-bottom {
-  from { opacity: 0; translate: 0 1.25rem; }
-  to { opacity: 1; translate: 0 0; }
-}
-
-@keyframes minimal-reveal-title {
-  from {
-    opacity: 0;
-    clip-path: inset(100% 0 0 0);
-    transform: translateY(2rem);
-  }
-  to {
-    opacity: 1;
-    clip-path: inset(0 0 0 0);
-    transform: translateY(0);
-  }
-}
-
 @media (max-width: 800px) {
   .minimal-hero {
     padding-top: 8rem;
@@ -1220,41 +896,6 @@ a[role="button"]:hover {
     font-size: 0.88rem;
   }
 
-  .minimal-about__content,
-  .minimal-work__heading {
-    display: block;
-  }
-
-  .minimal-about__copy {
-    margin-top: 2.5rem;
-  }
-
-  .minimal-work__heading h2 {
-    margin-top: 2.5rem;
-  }
-
-  .minimal-feature {
-    display: flex;
-    min-height: auto;
-    flex-direction: column;
-  }
-
-  .minimal-feature figure {
-    min-height: 65vw;
-  }
-
-  .minimal-feature__copy {
-    min-height: 23rem;
-  }
-
-  .minimal-project-list a {
-    grid-template-columns: 2.2rem minmax(0, 1fr) auto;
-  }
-
-  .minimal-project-list small {
-    display: none;
-  }
-
   .minimal-contact {
     min-height: auto;
   }
@@ -1262,7 +903,7 @@ a[role="button"]:hover {
 
 @media (max-width: 480px) {
   .minimal-nav-menu.is-open {
-    width: calc(100vw - (var(--minimal-gutter) * 2));
+    width: min(14rem, calc(100vw - (var(--minimal-gutter) * 2)));
   }
 
   .minimal-nav-menu__links {
@@ -1272,8 +913,7 @@ a[role="button"]:hover {
   }
 
   .minimal-nav-menu__links :where(a, button) {
-    font-size: 0.53rem;
-    letter-spacing: 0.07em;
+    font-size: 0.95rem;
   }
 
 }
@@ -1281,8 +921,7 @@ a[role="button"]:hover {
 @media (prefers-reduced-motion: reduce) {
   .minimal-nav-menu,
   .minimal-nav-menu__panel,
-  .minimal-nav-menu__dots,
-  .minimal-nav-menu__dots i {
+  .minimal-nav-menu__lily {
     transition: none !important;
   }
 
@@ -1292,20 +931,8 @@ a[role="button"]:hover {
     transition: none;
   }
 
-  .minimal-reveal {
-    animation: none !important;
-    opacity: 1;
-    translate: none;
-    transition: none;
-  }
-
   .minimal-cursor {
     display: none !important;
-  }
-
-  [data-tilt] {
-    transform: none !important;
-    transition: none !important;
   }
 
 }
@@ -1843,7 +1470,7 @@ html:has(.minimal-story.is-story) {
 .minimal-article :is(.eru-repo-card, .exam-week-card, .exam-portfolio-pagination a)::after {
   position: absolute;
   top: 1.2rem;
-  right: 0;
+  right: 0.6rem;
   color: var(--minimal-fg);
   content: "↗";
   transition: translate 0.38s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2256,4 +1883,292 @@ body:has(.minimal-article) .minimal-nav::before {
     display: block;
     overflow-x: auto;
   }
+}
+
+/* Repository boxes on the AIDA overview: tall boxes side by side. */
+.minimal-article .exam-repo-grid {
+  display: grid;
+  max-width: none;
+  margin-top: 1.5rem;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.minimal-article .exam-repo-grid .exam-week-card {
+  position: relative;
+  min-height: 13rem;
+  padding: 1.75rem 3rem 1.75rem 0;
+  border-top: 1px solid var(--minimal-line);
+  border-bottom: 1px solid var(--minimal-line);
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 0.75rem;
+}
+
+.minimal-article .exam-repo-grid .exam-week-card::after {
+  top: 1.75rem;
+  right: 0.6rem;
+}
+
+@media (max-width: 700px) {
+  .minimal-article .exam-repo-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Hovering a card or chapter button lights up its title as well as its lines. */
+.minimal-article .exam-week-card :is(.exam-week-card__title, .exam-week-card__body),
+.minimal-article .exam-portfolio-pagination a {
+  transition: color 0.3s ease;
+}
+
+.minimal-article .exam-week-card:is(:hover, :focus-visible) :is(.exam-week-card__title, .exam-week-card__body) {
+  color: var(--minimal-fg);
+}
+
+.dark .minimal-article .exam-week-card:is(:hover, :focus-visible) .exam-week-card__title,
+.dark .minimal-article .exam-portfolio-pagination a:is(:hover, :focus-visible) {
+  color: #ffffff !important;
+}
+
+html:not(.dark) .minimal-article .exam-portfolio-pagination a:hover,
+html:not(.dark) .minimal-article .exam-portfolio-pagination a:focus-visible {
+  color: var(--minimal-fg) !important;
+}
+
+.dark .minimal-nav-menu__links :where(a, button):is(:hover, :focus-visible) {
+  color: #ffffff;
+}
+
+.dark .minimal-nav-menu__links :where(a, button)::after {
+  background: #ffffff;
+}
+
+/* The badge beside the contact links. It stays quiet until it is hovered,
+   and then the cat lights up and comes to life. */
+.minimal-badge {
+  width: clamp(8rem, 30vw, 12rem);
+  margin-top: clamp(2rem, 5vw, 3rem);
+  margin-left: auto;
+  color: color-mix(in srgb, var(--minimal-fg) 42%, var(--minimal-bg));
+  transition: color 0.4s ease;
+}
+
+.minimal-badge svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.minimal-badge:hover {
+  color: color-mix(in srgb, var(--minimal-fg) 62%, var(--minimal-bg));
+}
+
+.minimal-badge__cat {
+  transition: color 0.4s ease, filter 0.4s ease;
+}
+
+.minimal-badge:hover .minimal-badge__cat {
+  color: #ffffff;
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.3));
+}
+
+/* The light spreads out from the cat: the waves follow a moment later, then
+   the name and the lilies, and "Copenhagen" on both sides last. Leaving,
+   everything dims at once. */
+:is(.minimal-badge__wave, .minimal-badge__name, .minimal-badge__lily, .minimal-badge__place) {
+  transition: color 0.4s ease, filter 0.4s ease;
+}
+
+.minimal-badge:hover :is(.minimal-badge__wave, .minimal-badge__name, .minimal-badge__lily, .minimal-badge__place) {
+  color: #ffffff;
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.3));
+}
+
+.minimal-badge:hover .minimal-badge__wave {
+  transition-delay: 0.15s;
+}
+
+.minimal-badge:hover :is(.minimal-badge__name, .minimal-badge__lily) {
+  transition-delay: 0.35s;
+}
+
+.minimal-badge:hover .minimal-badge__place {
+  transition-delay: 0.5s;
+}
+
+.minimal-badge :is(.minimal-badge__paw, .minimal-badge__tail, .minimal-badge__tail-tip, .minimal-badge__wave) {
+  transform-box: view-box;
+}
+
+.minimal-badge__paw {
+  transform-origin: 370px 403px;
+}
+
+.minimal-badge__paw.is-waving {
+  animation: minimal-badge-hello 1.2s ease-in-out;
+}
+
+.minimal-badge__tail {
+  transform-origin: 687px 468px;
+}
+
+.minimal-badge__tail-tip {
+  transform-origin: 606px 368px;
+}
+
+@keyframes minimal-badge-hello {
+  0%, 100% { rotate: 0deg; }
+  20% { rotate: 16deg; }
+  40% { rotate: -6deg; }
+  60% { rotate: 16deg; }
+  80% { rotate: -4deg; }
+}
+
+/* On wide screens it stands in the empty space to the right of the links,
+   level with the last one. */
+@media (min-width: 1024px) {
+  .minimal-contact {
+    display: grid;
+    grid-template-columns: minmax(0, 64rem) minmax(0, 1fr);
+    align-content: center;
+    column-gap: clamp(2rem, 5vw, 6rem);
+  }
+
+  .minimal-contact__title,
+  .minimal-contact__links {
+    grid-column: 1;
+  }
+
+  .minimal-badge {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: end;
+    justify-self: center;
+    width: clamp(10rem, 14vw, 15rem);
+    margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .minimal-badge__paw.is-waving {
+    animation: none;
+  }
+}
+
+/* The clock in the middle of the top bar, in blackletter and the same silver
+   as the logo and the loading badge. The font file is served from the site
+   itself. */
+@font-face {
+  font-family: "UnifrakturMaguntia";
+  font-display: swap;
+  src: url("/fonts/UnifrakturMaguntia-Regular.ttf") format("truetype");
+}
+
+.minimal-clock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: var(--minimal-fg);
+  cursor: default;
+  pointer-events: auto; /* the top bar itself lets the pointer through */
+  translate: -50% -50%;
+}
+
+.minimal-clock__time {
+  display: flex;
+  font-family: "UnifrakturMaguntia", serif;
+  font-size: clamp(1.3rem, 2.4vw, 2rem);
+  line-height: 1;
+}
+
+/* "Copenhagen", under the clock while it is hovered. */
+.minimal-clock__note {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: 50%;
+  color: var(--minimal-muted);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  opacity: 0;
+  pointer-events: none;
+  text-transform: uppercase;
+  transition:
+    opacity 0.25s ease,
+    translate 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  translate: -50% -0.3rem;
+  white-space: nowrap;
+}
+
+.minimal-clock:hover .minimal-clock__note {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+/* Focus mode leaves only the text, so the clock fades out with the rest. */
+.minimal-clock {
+  transition: opacity 0.4s ease;
+}
+
+body:has(.minimal-article--focus) .minimal-clock {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.minimal-clock__digit {
+  width: 0.6em;
+  text-align: center;
+}
+
+.minimal-clock__colon {
+  width: 0.35em;
+  text-align: center;
+}
+
+/* The two projects fold out under "projects" while it is hovered or has
+   focus. The padding on top bridges the gap, so the pointer can move down
+   to them without the list closing. */
+.minimal-nav-menu__group {
+  position: relative;
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.minimal-nav-menu__sub {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: grid;
+  padding-top: 0.5rem;
+  gap: 0.7rem;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.22s ease,
+    translate 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  translate: 0 -0.4rem;
+}
+
+.minimal-nav-menu__group:is(:hover, :focus-within) .minimal-nav-menu__sub {
+  opacity: 1;
+  pointer-events: auto;
+  translate: 0 0;
+}
+
+/* On a touch screen there is no hover, so the projects show as soon as the
+   menu is open. */
+@media (hover: none) {
+  .minimal-nav-menu.is-open .minimal-nav-menu__sub {
+    opacity: 1;
+    pointer-events: auto;
+    translate: 0 0;
+  }
+}
+
+.minimal-nav-menu__group:is(:hover, :focus-within) > a {
+  color: #ffffff;
 }

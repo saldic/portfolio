@@ -29,7 +29,7 @@ The deployment is officially **live** on https://eru-api.dk/api/v1/routes
 
 Let me introduce you to the **full CI/CD pipeline process** using GitHub Actions and Docker
 
-![Full CI/CD pipeline for eru](/portfolio/images/fullpipeline.png)
+![Full CI/CD pipeline for eru](/images/fullpipeline.png)
 
 So looking at this picture, how did the deployment actually work?
 
