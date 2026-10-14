@@ -85,7 +85,7 @@ function ProtectedRoute({ requiredRole }) {
 
 The first check handles normal protected pages. If there is no `currentUser`, the user is sent to login.
 
-The second check is only used when a route has a role requirement. In ERU, that is the admin route:
+The second check is only used when a route has a role requirement. In eru, that is the admin route:
 
 ```jsx
 <Route element={<ProtectedRoute requiredRole="ADMIN" />}>

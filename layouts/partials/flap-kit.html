@@ -22,6 +22,20 @@
     });
   };
 
+  // Wherever CSS sets text in capitals (labels, titles, buttons), eru keeps
+  // its small letters. Ordinary text is left alone.
+  document.addEventListener("DOMContentLoaded", () => {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const parents = new Set();
+    while (walker.nextNode()) {
+      const parent = walker.currentNode.parentElement;
+      if (!parent || !minimalNamePattern().test(walker.currentNode.textContent)) continue;
+      if (parent.closest(".minimal-keep-case, script, style")) continue;
+      if (getComputedStyle(parent).textTransform === "uppercase") parents.add(parent);
+    }
+    parents.forEach((parent) => minimalKeepCase(parent));
+  });
+
   // Letter-board kit for the minimal pages: every letter sits in a cell of
   // its own and decodes into place, running through a few random letters
   // before it lands. It is null with reduced motion, and the text then simply
