@@ -1,7 +1,7 @@
 ---
-title: "02 - Anatomy of Chip"
+title: "01 - Anatomy of Chip"
 date: 2026-10-13
-weight: 2
+weight: 1
 tags: ["aida", "chip", "rag", "dify"]
 showWordCount: true
 showReadingTime: true
@@ -9,10 +9,10 @@ showReadingTime: true
 
 <div class="exam-portfolio-nav">
   <a class="exam-portfolio-nav__link" href="../">Overview</a>
-  <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">01</a>
-  <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../anatomy-of-chip/">02</a>
-  <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">03</a>
-  <a class="exam-portfolio-nav__link" href="../interrogating-chip/">04</a>
+  <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../anatomy-of-chip/">01</a>
+  <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">02</a>
+  <a class="exam-portfolio-nav__link" href="../interrogating-chip/">03</a>
+  <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">04</a>
 </div>
 
 ## Chip the RAG-bot
@@ -108,6 +108,6 @@ The EU AI Act requires chatbots to tell people they're talking to an AI from 2 A
 Most of Chip's settings came from what we used in class, and at first I hadn't thought much about them. Going through them gave me a list of things to test: the number of chunks, the score threshold, hybrid search, the temperature and the missing AI disclosure. Some I changed, and some I tested and kept.
 
 <div class="exam-portfolio-pagination">
-  <a role="button" href="../delegating-the-code-not-the-theory/">Previous Chapter</a>
+  <a role="button" href="../">Back To Overview</a>
   <a role="button" href="../keeping-chip-up-to-date/">Next Chapter</a>
 </div>

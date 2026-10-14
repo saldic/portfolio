@@ -1,7 +1,7 @@
 ---
-title: "03 - Keeping Chip up to date"
+title: "02 - Keeping Chip up to date"
 date: 2026-10-13
-weight: 3
+weight: 2
 tags: ["aida", "chip", "rag", "automation", "python"]
 showWordCount: true
 showReadingTime: true
@@ -9,10 +9,10 @@ showReadingTime: true
 
 <div class="exam-portfolio-nav">
   <a class="exam-portfolio-nav__link" href="../">Overview</a>
-  <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">01</a>
-  <a class="exam-portfolio-nav__link" href="../anatomy-of-chip/">02</a>
-  <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../keeping-chip-up-to-date/">03</a>
-  <a class="exam-portfolio-nav__link" href="../interrogating-chip/">04</a>
+  <a class="exam-portfolio-nav__link" href="../anatomy-of-chip/">01</a>
+  <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../keeping-chip-up-to-date/">02</a>
+  <a class="exam-portfolio-nav__link" href="../interrogating-chip/">03</a>
+  <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">04</a>
 </div>
 
 ## A quality-of-life script

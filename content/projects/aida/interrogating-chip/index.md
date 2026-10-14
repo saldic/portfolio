@@ -1,7 +1,7 @@
 ---
-title: "04 - Interrogating Chip"
+title: "03 - Interrogating Chip"
 date: 2026-10-13
-weight: 4
+weight: 3
 tags: ["aida", "chip", "rag", "testing"]
 showWordCount: true
 showReadingTime: true
@@ -9,10 +9,10 @@ showReadingTime: true
 
 <div class="exam-portfolio-nav">
   <a class="exam-portfolio-nav__link" href="../">Overview</a>
-  <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">01</a>
-  <a class="exam-portfolio-nav__link" href="../anatomy-of-chip/">02</a>
-  <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">03</a>
-  <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../interrogating-chip/">04</a>
+  <a class="exam-portfolio-nav__link" href="../anatomy-of-chip/">01</a>
+  <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">02</a>
+  <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../interrogating-chip/">03</a>
+  <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">04</a>
 </div>
 
 ## Twelve questions for Chip
@@ -62,5 +62,5 @@ I checked both claims against my pages, and nothing was invented. But my pages c
 
 <div class="exam-portfolio-pagination">
   <a role="button" href="../keeping-chip-up-to-date/">Previous Chapter</a>
-  <a role="button" href="../">Back To Overview</a>
+  <a role="button" href="../delegating-the-code-not-the-theory/">Next Chapter</a>
 </div>

@@ -1,7 +1,7 @@
 ---
-title: "01 - Delegating the code, not the theory"
+title: "04 - Delegating the code, not the theory"
 date: 2026-10-13
-weight: 1
+weight: 4
 tags: ["aida", "naur", "reflection"]
 showWordCount: true
 showReadingTime: true
@@ -9,10 +9,10 @@ showReadingTime: true
 
 <div class="exam-portfolio-nav">
   <a class="exam-portfolio-nav__link" href="../">Overview</a>
-  <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../delegating-the-code-not-the-theory/">01</a>
-  <a class="exam-portfolio-nav__link" href="../anatomy-of-chip/">02</a>
-  <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">03</a>
-  <a class="exam-portfolio-nav__link" href="../interrogating-chip/">04</a>
+  <a class="exam-portfolio-nav__link" href="../anatomy-of-chip/">01</a>
+  <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">02</a>
+  <a class="exam-portfolio-nav__link" href="../interrogating-chip/">03</a>
+  <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../delegating-the-code-not-the-theory/">04</a>
 </div>
 
 ## Who's driving?
@@ -40,6 +40,6 @@ I've since learned that the result depends on how clear my instructions are. The
 Without grill-me, an agent usually fills in open decisions with a default and writes it into the plan, and it's hard to tell that guess apart from an actual choice. Grill-me helped us build that shared understanding, which mattered more than getting a perfect spec. It's the most useful way I've used AI so far, and I stayed in the driver's seat the whole way.
 
 <div class="exam-portfolio-pagination">
+  <a role="button" href="../interrogating-chip/">Previous Chapter</a>
   <a role="button" href="../">Back To Overview</a>
-  <a role="button" href="../anatomy-of-chip/">Next Chapter</a>
 </div>
