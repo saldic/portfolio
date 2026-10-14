@@ -12,7 +12,6 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">01</a>
   <a class="exam-portfolio-nav__link" href="../anatomy-of-chip/">02</a>
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../keeping-chip-up-to-date/">03</a>
-  <a class="exam-portfolio-nav__link" href="../interrogating-chip/">04</a>
 </div>
 
 ## A quality-of-life script
@@ -124,5 +123,5 @@ It still has gaps. It **never deletes**, so a page I remove from the site stays 
 
 <div class="exam-portfolio-pagination">
   <a role="button" href="../anatomy-of-chip/">Previous Chapter</a>
-  <a role="button" href="../interrogating-chip/">Next Chapter</a>
+  <a role="button" href="../">Back To Overview</a>
 </div>

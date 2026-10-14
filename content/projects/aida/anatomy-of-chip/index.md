@@ -12,7 +12,6 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">01</a>
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../anatomy-of-chip/">02</a>
   <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">03</a>
-  <a class="exam-portfolio-nav__link" href="../interrogating-chip/">04</a>
 </div>
 
 ## Chip the RAG-bot

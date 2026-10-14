@@ -26,9 +26,4 @@ cascade:
     <h3 class="exam-week-card__title">Keeping Chip up to date</h3>
   </a>
 
-  <a class="exam-week-card" href="./interrogating-chip/">
-    <p class="exam-week-card__eyebrow">04</p>
-    <h3 class="exam-week-card__title">Interrogating Chip</h3>
-  </a>
-
 </div>
