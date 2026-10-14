@@ -15,6 +15,7 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">04</a>
   <a class="exam-portfolio-nav__link" href="../grill-me/">05</a>
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../figma-make-process/">06</a>
+  <a class="exam-portfolio-nav__link" href="../security-and-ethics/">07</a>
 </div>
 
 ## Spec-driven design
@@ -36,5 +37,5 @@ I understood the code in principle. What I lacked was an overview. I could not s
 
 <div class="exam-portfolio-pagination">
   <a role="button" href="../grill-me/">Previous Chapter</a>
-  <a role="button" href="../">Back To Overview</a>
+  <a role="button" href="../security-and-ethics/">Next Chapter</a>
 </div>
