@@ -1950,7 +1950,7 @@ html:not(.dark) .minimal-article .exam-portfolio-pagination a:focus-visible {
 .minimal-badge {
   width: clamp(8rem, 30vw, 12rem);
   margin-top: clamp(2rem, 5vw, 3rem);
-  margin-left: auto;
+  margin-inline: auto; /* centred under the links on small screens */
   color: color-mix(in srgb, var(--minimal-fg) 42%, var(--minimal-bg));
   transition: color 0.4s ease;
 }
@@ -2116,6 +2116,15 @@ html:not(.dark) .minimal-article .exam-portfolio-pagination a:focus-visible {
 body:has(.minimal-article--focus) .minimal-clock {
   opacity: 0;
   pointer-events: none;
+}
+
+/* On small screens the open menu needs the room the clock stands in, so the
+   clock steps aside while the menu is open. */
+@media (max-width: 760px) {
+  body:has(.minimal-nav-menu.is-open) .minimal-clock {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 .minimal-clock__digit {
