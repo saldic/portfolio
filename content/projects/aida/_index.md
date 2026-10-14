@@ -36,4 +36,9 @@ cascade:
     <h3 class="exam-week-card__title">Grill-me</h3>
   </a>
 
+  <a class="exam-week-card" href="./figma-make-process/">
+    <p class="exam-week-card__eyebrow">06</p>
+    <h3 class="exam-week-card__title">The Figma Make process</h3>
+  </a>
+
 </div>

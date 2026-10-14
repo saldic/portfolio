@@ -14,6 +14,7 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../interrogating-chip/">03</a>
   <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">04</a>
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../grill-me/">05</a>
+  <a class="exam-portfolio-nav__link" href="../figma-make-process/">06</a>
 </div>
 
 ## From interview to specification
@@ -42,5 +43,5 @@ Looking back, we were in control of the decisions during the session. In Naur's 
 
 <div class="exam-portfolio-pagination">
   <a role="button" href="../delegating-the-code-not-the-theory/">Previous Chapter</a>
-  <a role="button" href="../">Back To Overview</a>
+  <a role="button" href="../figma-make-process/">Next Chapter</a>
 </div>

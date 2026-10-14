@@ -14,6 +14,7 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../interrogating-chip/">03</a>
   <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">04</a>
   <a class="exam-portfolio-nav__link" href="../grill-me/">05</a>
+  <a class="exam-portfolio-nav__link" href="../figma-make-process/">06</a>
 </div>
 
 ## A quality-of-life script
