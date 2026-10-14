@@ -31,4 +31,9 @@ cascade:
     <h3 class="exam-week-card__title">Delegating the code, not the theory</h3>
   </a>
 
+  <a class="exam-week-card" href="./grill-me/">
+    <p class="exam-week-card__eyebrow">05</p>
+    <h3 class="exam-week-card__title">Grill-me</h3>
+  </a>
+
 </div>

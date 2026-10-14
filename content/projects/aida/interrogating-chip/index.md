@@ -13,6 +13,7 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">02</a>
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../interrogating-chip/">03</a>
   <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">04</a>
+  <a class="exam-portfolio-nav__link" href="../grill-me/">05</a>
 </div>
 
 ## Twelve questions for Chip

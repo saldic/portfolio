@@ -13,6 +13,7 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">02</a>
   <a class="exam-portfolio-nav__link" href="../interrogating-chip/">03</a>
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../delegating-the-code-not-the-theory/">04</a>
+  <a class="exam-portfolio-nav__link" href="../grill-me/">05</a>
 </div>
 
 ## Who's driving?
@@ -41,5 +42,5 @@ Without grill-me, an agent usually fills in open decisions with a default and wr
 
 <div class="exam-portfolio-pagination">
   <a role="button" href="../interrogating-chip/">Previous Chapter</a>
-  <a role="button" href="../">Back To Overview</a>
+  <a role="button" href="../grill-me/">Next Chapter</a>
 </div>

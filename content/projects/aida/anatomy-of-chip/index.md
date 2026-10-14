@@ -13,6 +13,7 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../keeping-chip-up-to-date/">02</a>
   <a class="exam-portfolio-nav__link" href="../interrogating-chip/">03</a>
   <a class="exam-portfolio-nav__link" href="../delegating-the-code-not-the-theory/">04</a>
+  <a class="exam-portfolio-nav__link" href="../grill-me/">05</a>
 </div>
 
 ## Chip the RAG-bot
@@ -103,7 +104,7 @@ Before a visitor writes anything, Chip says:
 
 > Hi, I'm Chip, an AI assistant. I answer questions about Dino's portfolio using the pages on this site. I can get things wrong, so check anything important on the pages themselves.
 
-The EU AI Act requires chatbots to tell people they're talking to an AI from 2 August 2026 (module 12). Chip didn't, until I moved it to the live site.
+The EU AI Act requires chatbots to tell people they're talking to an AI from 2 August 2026. Chip didn't, until I moved it to the live site.
 
 Most of Chip's settings came from what we used in class, and at first I hadn't thought much about them. Going through them gave me a list of things to test: the number of chunks, the score threshold, hybrid search, the temperature and the missing AI disclosure. Some I changed, and some I tested and kept.
 
