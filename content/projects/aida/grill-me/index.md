@@ -16,6 +16,7 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../grill-me/">05</a>
   <a class="exam-portfolio-nav__link" href="../figma-make-process/">06</a>
   <a class="exam-portfolio-nav__link" href="../security-and-ethics/">07</a>
+  <a class="exam-portfolio-nav__link" href="../reflection/">08</a>
 </div>
 
 ## From interview to specification

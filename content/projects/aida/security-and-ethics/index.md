@@ -16,6 +16,7 @@ showReadingTime: true
   <a class="exam-portfolio-nav__link" href="../grill-me/">05</a>
   <a class="exam-portfolio-nav__link" href="../figma-make-process/">06</a>
   <a class="exam-portfolio-nav__link exam-portfolio-nav__link--current" href="../security-and-ethics/">07</a>
+  <a class="exam-portfolio-nav__link" href="../reflection/">08</a>
 </div>
 
 ## An agent or a spy?
@@ -52,5 +53,5 @@ OpenAI charges per **token**, a small piece of a word. For `gpt-4o-mini` the pri
 
 <div class="exam-portfolio-pagination">
   <a role="button" href="../figma-make-process/">Previous Chapter</a>
-  <a role="button" href="../">Back To Overview</a>
+  <a role="button" href="../reflection/">Next Chapter</a>
 </div>

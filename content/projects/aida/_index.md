@@ -46,4 +46,9 @@ cascade:
     <h3 class="exam-week-card__title">Security and ethics</h3>
   </a>
 
+  <a class="exam-week-card" href="./reflection/">
+    <p class="exam-week-card__eyebrow">08</p>
+    <h3 class="exam-week-card__title">Reflection</h3>
+  </a>
+
 </div>
