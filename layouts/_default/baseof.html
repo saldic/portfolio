@@ -9,7 +9,7 @@
   {{- partialCached "init.html" . -}}
 
   {{ $standardBodyLayout := "flex flex-col h-screen m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32" }}
-  {{ $isMinimal := or .IsHome (eq .Layout "story") }}
+  {{ $isMinimal := or .IsHome (eq .Layout "story") (eq .Kind "404") }}
   {{ $bodyLayout := cond $isMinimal "minimal-body flex min-h-screen flex-col leading-7" $standardBodyLayout }}
   {{ $bodyColor := "text-lg bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral" }}
   <body class="{{ $bodyLayout }} {{ $bodyColor }} {{ if site.Params.enableStyledScrollbar | default true }}bf-scrollbar{{ end }}">
@@ -38,9 +38,7 @@
     <div class="relative flex flex-col grow">
       <main id="main-content" class="grow">
         {{ block "main" . }}{{ end }}
-        {{ if site.Params.footer.showScrollToTop | default true }}
-          {{- partial "scroll-to-top.html" . -}}
-        {{ end }}
+        {{- if $isMinimal -}}{{- partial "back-to-top.html" . -}}{{- end -}}
       </main>
       {{- partial "footer.html" . -}}
     </div>

@@ -1,0 +1,28 @@
+{{/* The page for addresses that don't exist, in the style of the rest of
+   the site: the title decodes in, a way back, and the badge. */}}
+{{ define "main" }}
+  {{ partial "flap-kit.html" . }}
+
+  <div class="minimal-home">
+    <section class="minimal-404" aria-labelledby="minimal-404-title">
+      <p class="minimal-label"><span>404</span> Not found</p>
+      <h1 id="minimal-404-title" class="minimal-404__title">This page doesn't exist</h1>
+      <script>
+        // The title decodes in once, like the other titles on the site.
+        (() => {
+          const title = document.currentScript.previousElementSibling;
+          if (minimalFlap) minimalFlap.board(title)();
+        })();
+      </script>
+      <p class="minimal-404__text">It may have moved, or the address has a typo.</p>
+      <nav class="minimal-contact__links" aria-label="Ways back">
+        <a class="minimal-contact__link" href="{{ "" | relLangURL }}">Back to the front page</a>
+        <a class="minimal-contact__link" href="{{ "projects/aida/" | relLangURL }}">“aida”</a>
+        <a class="minimal-contact__link" href="{{ "projects/eru-project/what-is-eru/" | relLangURL }}">eru</a>
+      </nav>
+      {{ partial "contact-badge.html" . }}
+    </section>
+  </div>
+
+  {{ partial "minimal-chrome.html" . }}
+{{ end }}

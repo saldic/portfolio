@@ -2498,3 +2498,175 @@ body:has(.minimal-article--focus) .chip:not(.is-open) {
     animation: none;
   }
 }
+
+
+/* The 404 page: the title, a line of text, the ways back as rows like the
+   contact links, and the badge beside them on wide screens. */
+.minimal-404 {
+  display: flex;
+  min-height: 100svh;
+  padding: clamp(8rem, 14vh, 11rem) var(--minimal-gutter) clamp(3rem, 6vw, 5rem);
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.2rem, 3vw, 2rem);
+}
+
+.minimal-404__title {
+  color: var(--minimal-fg);
+  font-size: clamp(1.6rem, 5vw, 3.4rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.minimal-404__text {
+  max-width: 32rem;
+  color: var(--minimal-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+@media (min-width: 1024px) {
+  .minimal-404 {
+    display: grid;
+    grid-template-columns: minmax(0, 64rem) minmax(0, 1fr);
+    align-content: center;
+    column-gap: clamp(2rem, 5vw, 6rem);
+  }
+
+  .minimal-404 > :not(.minimal-badge) {
+    grid-column: 1;
+  }
+
+  .minimal-404 .minimal-badge {
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    align-self: end;
+    justify-self: center;
+    width: clamp(10rem, 14vw, 15rem);
+    margin: 0;
+  }
+}
+
+/* Back to the top, in the bottom right corner: a ring that fills with
+   silver as the page is read, and "Top" sliding out on hover. */
+.minimal-top {
+  position: fixed;
+  right: var(--minimal-gutter);
+  bottom: 1.5rem;
+  z-index: 60;
+  display: flex;
+  padding: 0;
+  border: 0;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  color: var(--minimal-fg);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    translate 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.3s ease;
+  translate: 0 0.5rem;
+}
+
+.minimal-top.is-shown {
+  opacity: 1;
+  pointer-events: auto;
+  translate: 0 0;
+}
+
+body:has(.minimal-article--focus) .minimal-top {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.minimal-top__label {
+  max-width: 0;
+  overflow: hidden;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  opacity: 0;
+  text-transform: uppercase;
+  transition:
+    max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.25s ease;
+}
+
+.minimal-top__ring {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+}
+
+.minimal-top__progress {
+  position: absolute;
+  inset: 0;
+  rotate: -90deg;
+}
+
+.minimal-top__progress circle {
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.minimal-top__track {
+  stroke: var(--minimal-line);
+}
+
+/* 138.2 is the length of the circle (2 x pi x 22). */
+.minimal-top__fill {
+  stroke: currentColor;
+  stroke-dasharray: 138.2;
+  stroke-dashoffset: calc(138.2 * (1 - var(--progress, 0)));
+}
+
+.minimal-top__arrow {
+  position: absolute;
+  inset: 0;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin: auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+  transition: translate 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.minimal-top:focus-visible {
+  outline: 1px solid var(--minimal-fg);
+  outline-offset: 0.3rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .minimal-top:hover {
+    color: #ffffff;
+  }
+
+  .minimal-top:hover .minimal-top__label {
+    max-width: 3rem;
+    opacity: 1;
+  }
+
+  .minimal-top:hover .minimal-top__arrow {
+    translate: 0 -0.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .minimal-top {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .minimal-top__ring {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+}
+

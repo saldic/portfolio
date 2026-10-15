@@ -1,0 +1,36 @@
+{{/* Back to the top: a thin ring that fills as the page is read, with an
+   arrow inside and "Top" sliding out beside it on hover. It shows once the
+   visitor has scrolled half a screen down. */}}
+<button class="minimal-top" type="button" aria-label="Back to the top">
+  <span class="minimal-top__label" aria-hidden="true">Top</span>
+  <span class="minimal-top__ring" aria-hidden="true">
+    <svg class="minimal-top__progress" viewBox="0 0 48 48">
+      <circle class="minimal-top__track" cx="24" cy="24" r="22" />
+      <circle class="minimal-top__fill" cx="24" cy="24" r="22" />
+    </svg>
+    <svg class="minimal-top__arrow" viewBox="0 0 14 14"><path d="M7 12V2M2.5 6.5L7 2L11.5 6.5" /></svg>
+  </span>
+</button>
+<script>
+  (() => {
+    const button = document.currentScript.previousElementSibling;
+    let queued = false;
+    const update = () => {
+      queued = false;
+      const room = document.documentElement.scrollHeight - window.innerHeight;
+      button.style.setProperty("--progress", room > 0 ? Math.min(window.scrollY / room, 1) : 0);
+      button.classList.toggle("is-shown", window.scrollY > window.innerHeight * 0.5);
+    };
+    window.addEventListener("scroll", () => {
+      if (!queued) {
+        queued = true;
+        window.requestAnimationFrame(update);
+      }
+    }, { passive: true });
+    update();
+    button.addEventListener("click", () => {
+      const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: still ? "auto" : "smooth" });
+    });
+  })();
+</script>

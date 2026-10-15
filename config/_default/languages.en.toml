@@ -16,7 +16,7 @@ title = "Dino Saldic"
 
 [params.author]
   name = "Dino Saldic"
-  email = "dinosaldic.tech@gmail.com"
+  email = "dino@saldic.dev"
   links = [
     { github = "https://github.com/saldic" },
     { linkedin = "https://www.linkedin.com/in/dinosaldic/" }
