@@ -2122,11 +2122,30 @@ body:has(.minimal-article--focus) .chip:not(.is-open) {
   white-space: nowrap;
 }
 
-.chip__launcher:is(:hover, :focus-visible) .chip__launcher-label,
+.chip__launcher:focus-visible .chip__launcher-label,
+.chip.is-peeking .chip__launcher-label,
 .chip.is-open .chip__launcher-label {
   max-width: 7rem;
   margin-right: 0.6rem;
   opacity: 1;
+}
+
+/* Only a real mouse opens the label on hover. A touch screen keeps the
+   last tap as a "hover", which would open the label after the window is
+   closed again. */
+@media (hover: hover) and (pointer: fine) {
+  .chip__launcher:hover .chip__launcher-label {
+    max-width: 7rem;
+    margin-right: 0.6rem;
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 1200px) {
+  .chip__launcher:hover .chip__launcher-label {
+    max-width: 9rem;
+    margin-right: 0.8rem;
+  }
 }
 
 .chip__launcher:hover,
@@ -2423,7 +2442,7 @@ body:has(.minimal-article--focus) .chip:not(.is-open) {
     font-size: 1.6rem;
   }
 
-  .chip__launcher:is(:hover, :focus-visible) .chip__launcher-label,
+  .chip__launcher:focus-visible .chip__launcher-label,
   .chip.is-open .chip__launcher-label {
     max-width: 9rem;
     margin-right: 0.8rem;

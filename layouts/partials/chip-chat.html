@@ -83,7 +83,38 @@
       launcher.setAttribute("aria-label", state ? "Close the chat" : "Chat with Chip");
       if (state) input.focus();
     };
-    launcher.addEventListener("click", () => open(panel.hidden));
+    // With a mouse one click opens the window. On a touch screen the first
+    // tap only folds out "Ask chip", so it is clear what the tab is, and a
+    // second tap opens the window. The label folds back after a few seconds
+    // or when the visitor taps somewhere else.
+    let pointer = "mouse";
+    let peekTimer;
+    const peek = (state) => {
+      window.clearTimeout(peekTimer);
+      root.classList.toggle("is-peeking", state);
+      if (state) peekTimer = window.setTimeout(() => peek(false), 4000);
+    };
+    launcher.addEventListener("pointerdown", (event) => {
+      pointer = event.pointerType;
+    });
+    launcher.addEventListener("keydown", () => {
+      pointer = "mouse";
+    });
+    launcher.addEventListener("click", () => {
+      if (!panel.hidden) {
+        open(false);
+        return;
+      }
+      if (pointer !== "mouse" && !root.classList.contains("is-peeking")) {
+        peek(true);
+        return;
+      }
+      peek(false);
+      open(true);
+    });
+    document.addEventListener("pointerdown", (event) => {
+      if (!launcher.contains(event.target)) peek(false);
+    });
     root.querySelector(".chip__close").addEventListener("click", () => {
       open(false);
       launcher.focus();
