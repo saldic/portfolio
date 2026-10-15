@@ -1,4 +1,4 @@
-{{/* Chip's own chat window. The cat button in the corner opens it, and the
+{{/* Chip's own chat window. The tab on the right edge opens it, and the
    questions go to the Worker on /api/chat, which asks Dify. The list of
    pages lets Chip's sources be shown with their titles and links. */}}
 {{ $pages := dict }}
@@ -11,7 +11,7 @@
   <section class="chip__window" id="chip-window" role="dialog" aria-labelledby="chip-name" hidden>
     <header class="chip__header">
       <div>
-        <p class="chip__name" id="chip-name">Chip</p>
+        <p class="chip__name" id="chip-name">chip</p>
         <p class="chip__tagline">Ask about my projects</p>
       </div>
       <button class="chip__close" type="button" aria-label="Close the chat">
@@ -35,9 +35,12 @@
         <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 12V2M2.5 6.5L7 2L11.5 6.5" /></svg>
       </button>
     </form>
-    <p class="chip__note">Chip runs on Dify and OpenAI. Please don't share personal details.</p>
+    <p class="chip__note">Answers via Dify and OpenAI · no personal details</p>
   </section>
+  {{/* A tab on the right edge of the screen: the cat, and "Ask chip" sliding
+     out beside it on hover. */}}
   <button class="chip__launcher" type="button" aria-expanded="false" aria-controls="chip-window" aria-label="Chat with Chip">
+    <span class="chip__launcher-label" aria-hidden="true"><span class="chip__launcher-ask">Ask</span> <span class="chip__launcher-name">chip</span></span>
     {{ (resources.Get "images/justCat.svg").Content | replaceRE `fill="#[0-9A-Fa-f]+"` `fill="currentColor"` | replaceRE `<svg ` `<svg aria-hidden="true" ` | safeHTML }}
   </button>
   <script type="application/json" class="chip__pages">{{ $pages | jsonify | safeJS }}</script>

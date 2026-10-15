@@ -2182,18 +2182,19 @@ body:has(.minimal-article--focus) .minimal-clock {
   color: #ffffff;
 }
 
-/* Chip's chat window: a cat button in the bottom corner, and a panel above
-   it in the style of the rest of the site, with thin lines, silver text and
-   the blackletter name. */
+/* Chip's chat window: a tab on the right edge of the screen, halfway down,
+   so it stays clear of the corners, and a panel that opens beside it in the
+   style of the rest of the site, with thin lines, silver text and the
+   blackletter name. */
 .chip {
   position: fixed;
-  right: var(--minimal-gutter, 1.5rem);
-  bottom: 1.5rem;
+  top: 50%;
+  right: 0;
   z-index: 80;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   gap: 0.8rem;
+  translate: 0 -50%;
   color: var(--minimal-fg);
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   transition: opacity 0.4s ease;
@@ -2205,22 +2206,59 @@ body:has(.minimal-article--focus) .chip:not(.is-open) {
 }
 
 .chip__launcher {
-  display: grid;
-  width: 3.4rem;
-  height: 3.4rem;
-  padding: 0;
+  display: flex;
+  height: 3.2rem;
+  padding: 0 0.75rem 0 0.8rem;
   border: 1px solid var(--minimal-line);
-  border-radius: 50%;
-  place-items: center;
+  border-right: 0;
+  align-items: center;
   background: var(--minimal-bg);
   color: var(--minimal-fg);
   transition: border-color 0.3s ease, color 0.3s ease;
 }
 
 .chip__launcher svg {
+  flex: none;
   width: auto;
-  height: 1.9rem;
+  height: 1.75rem;
   fill: currentColor;
+}
+
+/* "Ask chip" slides out to the left of the cat on hover, focus and while
+   the window is open: "Ask" in the small capitals used for labels on the
+   site, "chip" in blackletter. */
+.chip__launcher-ask {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.chip__launcher-name {
+  font-family: "UnifrakturMaguntia", serif;
+  font-size: 1.25rem;
+}
+
+.chip__launcher-label {
+  display: flex;
+  max-width: 0;
+  overflow: hidden;
+  align-items: center;
+  gap: 0.4rem;
+  line-height: 1;
+  opacity: 0;
+  transition:
+    max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    margin 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.25s ease;
+  white-space: nowrap;
+}
+
+.chip__launcher:is(:hover, :focus-visible) .chip__launcher-label,
+.chip.is-open .chip__launcher-label {
+  max-width: 7rem;
+  margin-right: 0.6rem;
+  opacity: 1;
 }
 
 .chip__launcher:hover,
@@ -2237,7 +2275,7 @@ body:has(.minimal-article--focus) .chip:not(.is-open) {
 
 .chip__window {
   display: flex;
-  width: min(24rem, calc(100vw - 2 * var(--minimal-gutter, 1.5rem)));
+  width: min(24rem, calc(100vw - 5rem));
   height: min(36rem, calc(100svh - 8rem));
   flex-direction: column;
   border: 1px solid var(--minimal-line);
@@ -2251,7 +2289,7 @@ body:has(.minimal-article--focus) .chip:not(.is-open) {
 }
 
 @keyframes chip-in {
-  from { opacity: 0; translate: 0 0.6rem; }
+  from { opacity: 0; translate: 0.6rem 0; }
 }
 
 .chip__header {
@@ -2282,6 +2320,7 @@ body:has(.minimal-article--focus) .chip:not(.is-open) {
 
 .chip__tagline {
   margin: 0.35rem 0 0;
+  line-height: 1.3;
 }
 
 .chip__close {
@@ -2420,6 +2459,7 @@ body:has(.minimal-article--focus) .chip:not(.is-open) {
 
 .chip__starters button {
   padding: 0.35rem 0.7rem;
+  line-height: 1.3;
   border: 1px solid var(--minimal-line);
   background: none;
   color: var(--minimal-muted);
@@ -2493,18 +2533,31 @@ body:has(.minimal-article--focus) .chip:not(.is-open) {
   margin: 0;
   padding: 0 1.1rem 0.8rem;
   font-size: 0.52rem;
+  line-height: 1.3;
 }
 
-/* On a phone the window fills the screen above the button. */
+/* On a phone the tab is a little smaller, and the window fills most of
+   the screen beside it. */
 @media (max-width: 480px) {
-  .chip {
-    right: 1rem;
-    bottom: 1rem;
+  .chip__launcher {
+    height: 2.8rem;
+    padding: 0 0.55rem 0 0.6rem;
+  }
+
+  .chip__launcher svg {
+    height: 1.5rem;
+  }
+
+  /* No room for the label beside an open window on a phone. */
+  .chip.is-open .chip__launcher-label {
+    max-width: 0;
+    margin-right: 0;
+    opacity: 0;
   }
 
   .chip__window {
-    width: calc(100vw - 2rem);
-    height: calc(100svh - 6.5rem);
+    width: calc(100vw - 4.5rem);
+    height: calc(100svh - 7rem);
   }
 
   .chip__form textarea {
