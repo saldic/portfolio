@@ -1,0 +1,10 @@
+{
+  // Cloudflare serves the Hugo site from the public folder. The build
+  // command is set in the Cloudflare dashboard.
+  "name": "portfolio",
+  "compatibility_date": "2026-10-15",
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page"
+  }
+}
