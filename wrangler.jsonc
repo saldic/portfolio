@@ -6,6 +6,12 @@
   "name": "portfolio",
   "main": "./worker/index.js",
   "compatibility_date": "2026-10-15",
+  // Caps on how many questions Chip gets: 8 a minute per visitor and 40 a
+  // minute in total (see worker/index.js).
+  "ratelimits": [
+    { "name": "CHIP_VISITOR_LIMIT", "namespace_id": "2001", "simple": { "limit": 8, "period": 60 } },
+    { "name": "CHIP_TOTAL_LIMIT", "namespace_id": "2002", "simple": { "limit": 40, "period": 60 } }
+  ],
   "vars": {
     "DIFY_BASE_URL": "https://api.dify.ai/v1",
     "ALLOWED_ORIGINS": "https://saldic.dev"

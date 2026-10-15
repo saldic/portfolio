@@ -2,7 +2,8 @@
 // the Dify app with the secret API key and streams the answer back, so the
 // key never reaches the browser. It only passes on the answer text, the
 // names of the pages the answer came from and the conversation id, nothing
-// else from Dify. Every other request is served from the static site.
+// else from Dify, and it caps how many questions can be asked a minute.
+// Every other request is served from the static site.
 
 const MAX_QUESTION = 600; // characters
 
@@ -24,6 +25,17 @@ export default {
     if (request.method !== "POST") return json({ error: "Method not allowed." }, 405, cors);
     if (!allowed.includes(origin)) return json({ error: "This site may not use Chip." }, 403, cors);
     if (!env.DIFY_API_KEY) return json({ error: "Chip is not set up yet." }, 500, cors);
+
+    // Every question costs tokens, so each visitor gets a few questions a
+    // minute, and everyone together a few more. Cloudflare counts per data
+    // centre, so the caps are rough but stop anyone from running up the bill.
+    const visitor = request.headers.get("CF-Connecting-IP") || "unknown";
+    const [mine, everyone] = await Promise.all([
+      env.CHIP_VISITOR_LIMIT ? env.CHIP_VISITOR_LIMIT.limit({ key: `chip:${visitor}` }) : { success: true },
+      env.CHIP_TOTAL_LIMIT ? env.CHIP_TOTAL_LIMIT.limit({ key: "chip:all" }) : { success: true },
+    ]);
+    if (!mine.success) return json({ error: "That's a lot of questions at once. Give Chip a minute and try again." }, 429, cors);
+    if (!everyone.success) return json({ error: "Chip is busy right now. Try again in a minute." }, 429, cors);
 
     let body;
     try {
