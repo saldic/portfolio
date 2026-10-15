@@ -1,0 +1,208 @@
+{{/* Chip's own chat window. The cat button in the corner opens it, and the
+   questions go to the Worker on /api/chat, which asks Dify. The list of
+   pages lets Chip's sources be shown with their titles and links. */}}
+{{ $pages := dict }}
+{{ range $page := site.RegularPages }}
+  {{ with $page.File }}
+    {{ $pages = merge $pages (dict .Path (dict "title" $page.Title "url" $page.RelPermalink)) }}
+  {{ end }}
+{{ end }}
+<div class="chip" data-chip>
+  <section class="chip__window" id="chip-window" role="dialog" aria-labelledby="chip-name" hidden>
+    <header class="chip__header">
+      <div>
+        <p class="chip__name" id="chip-name">Chip</p>
+        <p class="chip__tagline">Ask about my projects</p>
+      </div>
+      <button class="chip__close" type="button" aria-label="Close the chat">
+        <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2L12 12M12 2L2 12" /></svg>
+      </button>
+    </header>
+    <ol class="chip__messages" aria-live="polite">
+      <li class="chip__message chip__message--chip">
+        <div class="chip__text"><p>Hi, I'm Chip. I have read every page of this portfolio, so ask me anything about Dino's projects.</p></div>
+      </li>
+    </ol>
+    <div class="chip__starters">
+      <button type="button">What is Chip?</button>
+      <button type="button">What is eru?</button>
+      <button type="button">What did you learn in AIDA?</button>
+    </div>
+    <form class="chip__form">
+      <label class="chip__label" for="chip-input">Your question</label>
+      <textarea id="chip-input" rows="1" maxlength="600" placeholder="Ask Chip something…"></textarea>
+      <button class="chip__send" type="submit" aria-label="Send">
+        <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 12V2M2.5 6.5L7 2L11.5 6.5" /></svg>
+      </button>
+    </form>
+    <p class="chip__note">Chip runs on Dify and OpenAI. Please don't share personal details.</p>
+  </section>
+  <button class="chip__launcher" type="button" aria-expanded="false" aria-controls="chip-window" aria-label="Chat with Chip">
+    {{ (resources.Get "images/justCat.svg").Content | replaceRE `fill="#[0-9A-Fa-f]+"` `fill="currentColor"` | replaceRE `<svg ` `<svg aria-hidden="true" ` | safeHTML }}
+  </button>
+  <script type="application/json" class="chip__pages">{{ $pages | jsonify | safeJS }}</script>
+</div>
+<script>
+  // The chat window: sends a question to /api/chat and writes the answer in
+  // as it streams back, then lists the pages it came from. The conversation
+  // lasts while the tab is open, so Chip remembers earlier questions.
+  (() => {
+    const root = document.querySelector("[data-chip]");
+    const launcher = root.querySelector(".chip__launcher");
+    const panel = root.querySelector(".chip__window");
+    const list = root.querySelector(".chip__messages");
+    const form = root.querySelector(".chip__form");
+    const input = root.querySelector("#chip-input");
+    const send = root.querySelector(".chip__send");
+    const starters = root.querySelector(".chip__starters");
+    const pages = JSON.parse(root.querySelector(".chip__pages").textContent || "{}");
+
+    const store = (storage, key, make) => {
+      try {
+        let value = storage.getItem(key);
+        if (!value && make) storage.setItem(key, (value = make()));
+        return value || "";
+      } catch {
+        return make ? make() : "";
+      }
+    };
+    const save = (key, value) => {
+      try { sessionStorage.setItem(key, value); } catch {}
+    };
+    const user = store(localStorage, "chip-user", () => `visitor-${crypto.randomUUID()}`);
+    let conversationId = store(sessionStorage, "chip-conversation");
+    let busy = false;
+
+    const open = (state) => {
+      panel.hidden = !state;
+      root.classList.toggle("is-open", state);
+      launcher.setAttribute("aria-expanded", String(state));
+      launcher.setAttribute("aria-label", state ? "Close the chat" : "Chat with Chip");
+      if (state) input.focus();
+    };
+    launcher.addEventListener("click", () => open(panel.hidden));
+    root.querySelector(".chip__close").addEventListener("click", () => {
+      open(false);
+      launcher.focus();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !panel.hidden) {
+        open(false);
+        launcher.focus();
+      }
+    });
+
+    // A little Markdown: paragraphs, lists, bold and code. Everything is
+    // escaped first, so an answer can never add HTML of its own.
+    const escape = (text) => text.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+    const inline = (text) => escape(text).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/`([^`]+)`/g, "<code>$1</code>");
+    const markdown = (text) => text.trim().split(/\n{2,}/).map((block) => {
+      const lines = block.split("\n");
+      if (lines.every((line) => /^\s*([-*]|\d+\.)\s+/.test(line))) {
+        const tag = /^\s*\d+\./.test(lines[0]) ? "ol" : "ul";
+        return `<${tag}>${lines.map((line) => `<li>${inline(line.replace(/^\s*([-*]|\d+\.)\s+/, ""))}</li>`).join("")}</${tag}>`;
+      }
+      return `<p>${lines.map(inline).join("<br>")}</p>`;
+    }).join("");
+
+    const add = (who, html) => {
+      const item = document.createElement("li");
+      item.className = `chip__message chip__message--${who}`;
+      item.innerHTML = `<div class="chip__text">${html}</div>`;
+      list.append(item);
+      list.scrollTop = list.scrollHeight;
+      return item;
+    };
+    const sources = (item, names) => {
+      const links = names.map((name) => pages[name]).filter(Boolean);
+      if (!links.length) return;
+      const box = document.createElement("p");
+      box.className = "chip__sources";
+      box.innerHTML = `<span>From</span> ${links.map((page) => `<a href="${escape(page.url)}">${escape(page.title.replace(/^\d+\s*-\s*/, ""))}</a>`).join("")}`;
+      item.append(box);
+    };
+
+    const ask = async (question) => {
+      if (busy || !question.trim()) return;
+      busy = true;
+      send.disabled = true;
+      starters.hidden = true;
+      add("user", `<p>${escape(question.trim())}</p>`);
+      const reply = add("chip", '<p class="chip__thinking"><i></i><i></i><i></i></p>');
+      const text = reply.querySelector(".chip__text");
+      let answer = "";
+      const fail = (message) => {
+        text.innerHTML = `<p class="chip__error">${escape(message)}</p>`;
+      };
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question, conversationId, user }),
+        });
+        if (!response.ok) {
+          const { error } = await response.json().catch(() => ({}));
+          fail(error || "Chip could not answer right now. Try again in a moment.");
+          return;
+        }
+        const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+        let buffer = "";
+        let done = false;
+        while (!done) {
+          const chunk = await reader.read();
+          if (chunk.done) break;
+          buffer += chunk.value;
+          let end;
+          while ((end = buffer.indexOf("\n\n")) >= 0) {
+            const line = buffer.slice(0, end).replace(/^data:\s*/, "");
+            buffer = buffer.slice(end + 2);
+            const event = JSON.parse(line);
+            if (event.type === "answer") {
+              answer += event.text;
+              text.innerHTML = markdown(answer);
+            } else if (event.type === "done") {
+              conversationId = event.conversationId || conversationId;
+              save("chip-conversation", conversationId);
+              sources(reply, event.sources || []);
+              done = true;
+            } else if (event.type === "error") {
+              fail("Chip lost the thread. Try asking again.");
+              done = true;
+            }
+          }
+          list.scrollTop = list.scrollHeight;
+        }
+        if (!answer && !done) fail("Chip could not answer right now. Try again in a moment.");
+      } catch {
+        fail("Chip could not be reached. Check your connection and try again.");
+      } finally {
+        busy = false;
+        send.disabled = false;
+        list.scrollTop = list.scrollHeight;
+        input.focus();
+      }
+    };
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const question = input.value;
+      input.value = "";
+      input.style.height = "";
+      ask(question);
+    });
+    // Enter sends, Shift+Enter makes a new line, and the field grows with
+    // the text.
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+    input.addEventListener("input", () => {
+      input.style.height = "";
+      input.style.height = `${Math.min(input.scrollHeight, 120)}px`;
+    });
+    starters.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => ask(button.textContent)));
+  })();
+</script>

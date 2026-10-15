@@ -115,7 +115,13 @@
         }
       });
     </script>
-    {{- partial "dify-chatbot.html" . -}}
+    {{/* Chip's own chat window is switched on with HUGO_CHIP_WINDOW=true in the
+       build, which is set on Cloudflare. Without it, the Dify bubble is used. */}}
+    {{- if eq (getenv "HUGO_CHIP_WINDOW") "true" -}}
+      {{- if $isMinimal -}}{{- partialCached "chip-chat.html" . -}}{{- end -}}
+    {{- else -}}
+      {{- partial "dify-chatbot.html" . -}}
+    {{- end -}}
   </body>
   {{ if site.Params.buymeacoffee.globalWidget | default false }}
     <script

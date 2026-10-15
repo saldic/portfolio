@@ -1,11 +1,19 @@
 {
-  // Cloudflare serves the Hugo site from the public folder. The build
-  // command is set in the Cloudflare dashboard.
+  // Cloudflare serves the Hugo site from the public folder. Requests to
+  // /api/ go to the Worker in worker/index.js first, which answers Chip's
+  // chat window. The build command is set in the Cloudflare dashboard, and
+  // the Dify API key is a secret there (DIFY_API_KEY).
   "name": "portfolio",
+  "main": "./worker/index.js",
   "compatibility_date": "2026-10-15",
-  "vars": {},
+  "vars": {
+    "DIFY_BASE_URL": "https://api.dify.ai/v1",
+    "ALLOWED_ORIGINS": "https://saldic.dev"
+  },
   "assets": {
     "directory": "./public",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
   }
 }

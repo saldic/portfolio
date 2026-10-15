@@ -2181,3 +2181,340 @@ body:has(.minimal-article--focus) .minimal-clock {
 .minimal-nav-menu__group:is(:hover, :focus-within) > a {
   color: #ffffff;
 }
+
+/* Chip's chat window: a cat button in the bottom corner, and a panel above
+   it in the style of the rest of the site, with thin lines, silver text and
+   the blackletter name. */
+.chip {
+  position: fixed;
+  right: var(--minimal-gutter, 1.5rem);
+  bottom: 1.5rem;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.8rem;
+  color: var(--minimal-fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  transition: opacity 0.4s ease;
+}
+
+body:has(.minimal-article--focus) .chip:not(.is-open) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chip__launcher {
+  display: grid;
+  width: 3.4rem;
+  height: 3.4rem;
+  padding: 0;
+  border: 1px solid var(--minimal-line);
+  border-radius: 50%;
+  place-items: center;
+  background: var(--minimal-bg);
+  color: var(--minimal-fg);
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.chip__launcher svg {
+  width: auto;
+  height: 1.9rem;
+  fill: currentColor;
+}
+
+.chip__launcher:hover,
+.chip.is-open .chip__launcher {
+  border-color: var(--minimal-fg);
+  color: #ffffff;
+}
+
+.chip__launcher:focus-visible,
+.chip :is(.chip__close, .chip__send, .chip__starters button):focus-visible {
+  outline: 1px solid var(--minimal-fg);
+  outline-offset: 0.25rem;
+}
+
+.chip__window {
+  display: flex;
+  width: min(24rem, calc(100vw - 2 * var(--minimal-gutter, 1.5rem)));
+  height: min(36rem, calc(100svh - 8rem));
+  flex-direction: column;
+  border: 1px solid var(--minimal-line);
+  background: var(--minimal-bg);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.45);
+  animation: chip-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chip__window[hidden] {
+  display: none;
+}
+
+@keyframes chip-in {
+  from { opacity: 0; translate: 0 0.6rem; }
+}
+
+.chip__header {
+  display: flex;
+  padding: 1rem 1.1rem 0.9rem;
+  border-bottom: 1px solid var(--minimal-line);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chip__name {
+  margin: 0;
+  font-family: "UnifrakturMaguntia", serif;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.chip__tagline,
+.chip__note,
+.chip__sources span,
+.chip__label {
+  color: var(--minimal-muted);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.chip__tagline {
+  margin: 0.35rem 0 0;
+}
+
+.chip__close {
+  width: 2rem;
+  height: 2rem;
+  padding: 0.55rem;
+  border: 0;
+  background: none;
+  color: var(--minimal-muted);
+  transition: color 0.3s ease;
+}
+
+.chip__close:hover {
+  color: #ffffff;
+}
+
+.chip :is(.chip__close, .chip__send) svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.chip__messages {
+  display: flex;
+  margin: 0;
+  padding: 1.1rem;
+  flex: 1;
+  flex-direction: column;
+  gap: 1.1rem;
+  list-style: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.chip__message {
+  max-width: 88%;
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.chip__message--user {
+  align-self: flex-end;
+  padding-right: 0.75rem;
+  border-right: 1px solid var(--minimal-fg);
+  color: var(--minimal-muted);
+  text-align: right;
+}
+
+.chip__text :is(p, ul, ol) {
+  margin: 0;
+}
+
+.chip__text :is(p, ul, ol) + :is(p, ul, ol) {
+  margin-top: 0.6rem;
+}
+
+.chip__text :is(ul, ol) {
+  padding-left: 1.1rem;
+}
+
+.chip__text strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.chip__text code {
+  padding: 0.05em 0.3em;
+  background: color-mix(in srgb, var(--minimal-fg) 9%, transparent);
+  font-size: 0.9em;
+}
+
+.chip__error {
+  color: var(--minimal-muted);
+  font-style: italic;
+}
+
+/* Three dots that pulse while Chip is thinking. */
+.chip__thinking {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.4rem 0;
+}
+
+.chip__thinking i {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: var(--minimal-fg);
+  animation: chip-think 1.2s ease-in-out infinite;
+}
+
+.chip__thinking i:nth-child(2) { animation-delay: 0.15s; }
+.chip__thinking i:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes chip-think {
+  0%, 100% { opacity: 0.2; }
+  40% { opacity: 1; }
+}
+
+.chip__sources {
+  display: flex;
+  margin: 0.6rem 0 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+}
+
+.chip__sources a {
+  color: var(--minimal-fg);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--minimal-fg) 40%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+.chip__sources a:hover {
+  color: #ffffff;
+  text-decoration-color: currentColor;
+}
+
+.chip__starters {
+  display: flex;
+  padding: 0 1.1rem 0.9rem;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chip__starters[hidden] {
+  display: none;
+}
+
+.chip__starters button {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--minimal-line);
+  background: none;
+  color: var(--minimal-muted);
+  font-size: 0.72rem;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.chip__starters button:hover {
+  border-color: var(--minimal-fg);
+  color: #ffffff;
+}
+
+.chip__form {
+  display: flex;
+  margin: 0;
+  padding: 0.7rem 0.7rem 0.7rem 1.1rem;
+  border-top: 1px solid var(--minimal-line);
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.chip__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.chip__form textarea {
+  max-height: 7.5rem;
+  margin: 0;
+  padding: 0.45rem 0;
+  flex: 1;
+  border: 0;
+  background: none;
+  color: var(--minimal-fg);
+  font: inherit;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  outline: none;
+  resize: none;
+  box-shadow: none;
+}
+
+.chip__form textarea::placeholder {
+  color: var(--minimal-muted);
+}
+
+.chip__send {
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0.55rem;
+  border: 1px solid var(--minimal-line);
+  border-radius: 50%;
+  background: none;
+  color: var(--minimal-fg);
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.chip__send:hover:not(:disabled) {
+  border-color: var(--minimal-fg);
+  color: #ffffff;
+}
+
+.chip__send:disabled {
+  opacity: 0.35;
+}
+
+.chip__note {
+  margin: 0;
+  padding: 0 1.1rem 0.8rem;
+  font-size: 0.52rem;
+}
+
+/* On a phone the window fills the screen above the button. */
+@media (max-width: 480px) {
+  .chip {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .chip__window {
+    width: calc(100vw - 2rem);
+    height: calc(100svh - 6.5rem);
+  }
+
+  .chip__form textarea {
+    font-size: 1rem; /* stops iOS from zooming into the field */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip__window,
+  .chip__thinking i {
+    animation: none;
+  }
+}
