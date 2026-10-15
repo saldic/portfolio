@@ -7,6 +7,11 @@
 
 const MAX_QUESTION = 600; // characters
 
+// Most of Chip's pages write the course out in full and only the page
+// headers say "AIDA", so a question that just says "AIDA" finds the headers
+// and not the content. The name is spelled out before the question goes on.
+const spellOut = (question) => question.replace(/\bAIDA\b/gi, "AIDA (the AI-driven applications elective)");
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -53,7 +58,7 @@ export default {
     const dify = await fetch(`${base}/chat-messages`, {
       method: "POST",
       headers: { Authorization: `Bearer ${env.DIFY_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ inputs: {}, query: question, response_mode: "streaming", conversation_id: conversationId, user }),
+      body: JSON.stringify({ inputs: {}, query: spellOut(question), response_mode: "streaming", conversation_id: conversationId, user }),
     });
     if (!dify.ok || !dify.body) {
       console.log(`Dify answered ${dify.status}: ${await dify.text().catch(() => "")}`);
