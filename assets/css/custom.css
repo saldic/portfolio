@@ -2536,6 +2536,46 @@ body:has(.minimal-article--focus) .chip:not(.is-open) {
   line-height: 1.3;
 }
 
+/* On large screens the tab and the window grow with the screen. */
+@media (min-width: 1200px) {
+  .chip__launcher {
+    height: 4rem;
+    padding: 0 1rem 0 1.1rem;
+  }
+
+  .chip__launcher svg {
+    height: 2.3rem;
+  }
+
+  .chip__launcher-ask {
+    font-size: 0.72rem;
+  }
+
+  .chip__launcher-name {
+    font-size: 1.6rem;
+  }
+
+  .chip__launcher:is(:hover, :focus-visible) .chip__launcher-label,
+  .chip.is-open .chip__launcher-label {
+    max-width: 9rem;
+    margin-right: 0.8rem;
+  }
+
+  .chip__window {
+    width: min(30rem, calc(100vw - 8rem));
+    height: min(44rem, calc(100svh - 8rem));
+  }
+
+  .chip__message,
+  .chip__form textarea {
+    font-size: 0.95rem;
+  }
+
+  .chip__name {
+    font-size: 2rem;
+  }
+}
+
 /* On a phone the tab is a little smaller, and the window fills most of
    the screen beside it. */
 @media (max-width: 480px) {
