@@ -7,3 +7,4 @@ node_modules/
 .venv/
 .rag-sync-state*.json
 __pycache__/
+.claude/

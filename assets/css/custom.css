@@ -249,59 +249,6 @@ mark {
   font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
-/* Scroll reveal on the theme's article pages */
-.portfolio-motion-page.js-scroll-ready [data-scroll-reveal] {
-  opacity: 0;
-  transform: translateY(34px);
-  transition:
-    opacity 0.8s ease,
-    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
-  will-change: opacity, transform;
-}
-
-.portfolio-motion-page.js-scroll-ready [data-scroll-reveal="left"] {
-  transform: translateX(-56px) rotate(-1deg);
-}
-
-.portfolio-motion-page.js-scroll-ready [data-scroll-reveal="right"] {
-  transform: translateX(56px) rotate(1deg);
-}
-
-.portfolio-motion-page.js-scroll-ready [data-scroll-reveal].is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-@keyframes portfolio-slide-right {
-  from {
-    opacity: 0;
-    transform: translateX(-56px) rotate(-1.5deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) rotate(0);
-  }
-}
-
-@keyframes portfolio-slide-left {
-  from {
-    opacity: 0;
-    transform: translateX(56px) rotate(1.5deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) rotate(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .portfolio-motion-page.js-scroll-ready [data-scroll-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-}
-
 /* Cards */
 .article-link--card,
 .article-link--simple {
@@ -375,75 +322,6 @@ a[role="button"]:hover {
 
 .icon {
   color: rgba(var(--theme-secondary-rgb), 1);
-}
-
-/* Search */
-#search-wrapper {
-  background: rgba(var(--theme-bg-rgb), 0.42) !important;
-  backdrop-filter: blur(14px) saturate(1.02);
-}
-
-#search-modal {
-  border: 1px solid rgba(var(--theme-border-rgb), 0.52) !important;
-  border-radius: 1.2rem !important;
-  background:
-    linear-gradient(160deg, rgba(var(--theme-surface-strong-rgb), 0.97), rgba(var(--theme-surface-rgb), 0.92)) !important;
-  box-shadow:
-    0 28px 70px rgba(8, 2, 14, 0.36),
-    inset 0 1px 0 rgba(var(--theme-accent-rgb), 0.08) !important;
-  overflow: hidden;
-}
-
-#search-modal header {
-  padding: 0.6rem 0.75rem !important;
-  border-bottom: 1px solid rgba(var(--theme-border-rgb), 0.28);
-  background: rgba(var(--theme-primary-rgb), 0.08);
-}
-
-#search-modal form {
-  min-height: 3.4rem;
-  border: 1px solid rgba(var(--theme-border-rgb), 0.45);
-  border-radius: 0.95rem;
-  background: rgba(var(--theme-bg-rgb), 0.22);
-  box-shadow: inset 0 1px 0 rgba(var(--theme-accent-rgb), 0.06);
-}
-
-#search-modal form:focus-within {
-  border-color: rgba(var(--theme-secondary-rgb), 0.82);
-  box-shadow:
-    0 0 0 4px rgba(var(--theme-primary-rgb), 0.18),
-    inset 0 1px 0 rgba(var(--theme-accent-rgb), 0.08);
-}
-
-#search-query {
-  color: rgba(var(--theme-text-rgb), 0.98);
-  font-size: 1.05rem;
-}
-
-#search-query::placeholder {
-  color: rgba(var(--theme-muted-rgb), 0.78);
-}
-
-#search-modal .icon,
-#close-search-button {
-  color: rgba(var(--theme-secondary-rgb), 0.9) !important;
-}
-
-#close-search-button:hover {
-  color: rgba(var(--theme-accent-rgb), 1) !important;
-}
-
-#search-results a {
-  border: 1px solid rgba(var(--theme-border-rgb), 0.28);
-  border-radius: 0.95rem !important;
-  background: rgba(var(--theme-bg-rgb), 0.18) !important;
-  color: rgba(var(--theme-text-rgb), 0.98) !important;
-}
-
-#search-results a:hover,
-#search-results a:focus {
-  border-color: rgba(var(--theme-secondary-rgb), 0.75);
-  background: rgba(var(--theme-primary-rgb), 0.2) !important;
 }
 
 @media (max-width: 768px) {
@@ -637,10 +515,6 @@ a[role="button"]:hover {
 .minimal-nav-menu.is-open .minimal-nav-menu__lily {
   color: #ffffff;
   translate: 0 -0.12rem;
-}
-
-.minimal-nav__theme {
-  padding: 0;
 }
 
 .minimal-hero {
@@ -871,8 +745,7 @@ a[role="button"]:hover {
   color: color-mix(in srgb, var(--minimal-fg) 48%, transparent);
 }
 
-.minimal-body #site-footer > nav,
-.minimal-body #site-footer > .mt-4 {
+.minimal-body #site-footer > nav {
   display: none;
 }
 
@@ -1930,11 +1803,6 @@ body:has(.minimal-article) .minimal-nav::before {
 .dark .minimal-article .exam-week-card:is(:hover, :focus-visible) .exam-week-card__title,
 .dark .minimal-article .exam-portfolio-pagination a:is(:hover, :focus-visible) {
   color: #ffffff !important;
-}
-
-html:not(.dark) .minimal-article .exam-portfolio-pagination a:hover,
-html:not(.dark) .minimal-article .exam-portfolio-pagination a:focus-visible {
-  color: var(--minimal-fg) !important;
 }
 
 .dark .minimal-nav-menu__links :where(a, button):is(:hover, :focus-visible) {
