@@ -3,6 +3,7 @@
   // command is set in the Cloudflare dashboard.
   "name": "portfolio",
   "compatibility_date": "2026-10-15",
+  "vars": {},
   "assets": {
     "directory": "./public",
     "not_found_handling": "404-page"
